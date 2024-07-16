@@ -19,7 +19,7 @@ body {
 
 #map {
   /* 지도 */
-  height: 820px;
+  height: 100%;
 }
 
 .rowScroll {
@@ -33,64 +33,6 @@ body {
 .rowScroll::-webkit-scrollbar {
   /* 가로 스크롤 바 */
   display: none; 
-}
-
-.card {
-  /* 카드 */
-  display: inline-block;
-  text-align: center;
-  background-image: linear-gradient(to top, #fff3ed 0%, #d8f1fc 100%);
-}
-
-#current {
-  /* 현재위치 박스 */
-  padding: 5px;
-}
-
-#search {
-  /* 검색위치 박스 */
-  padding: 5px;
-}
-
-#currentName, #searchName {
-  /* 현재위치/검색위치 박스 제목 */
-  font-size: 15pt;
-  font-weight: 600;
-}
-
-#weatherIcon {
-  /* 날씨 아이콘 */
-  width: 5rem;
-  height: 5rem;
-  padding-top: 0.2rem;
-}
-
-.card-text {
-  /* 카드 글씨 */
-  padding-top: 0.6rem;
-}
-
-.day {
-  /* 오늘 / 내일 */
-  font-weight: 500;
-  font-size: 14pt;
-}
-
-.daydate {
-  /* 오늘 / 내일의 날짜 */
-  padding-right: 1rem;
-}
-
-.daylow {
-  /* 최저 기온 */
-  font-size: 13pt;
-  color: crimson;
-}
-
-.dayhigh {
-  /* 최고 기온 */
-  font-size: 13pt;
-  color: blue;
 }
 
 .map_wrap {
@@ -113,32 +55,4 @@ body {
   margin-bottom: 10px;
   margin-top: 10px;
   box-shadow: 5px 5px 20px 5px #D0D0D0;
-}
-
-.weatherbox {
-  /* 날씨 박스 */
-  background-color: #F2F2F2;
-  border-radius: 15px;
-  padding: 15px;
-  height: auto;
-  width: auto;
-  margin-bottom: 20px;
-  margin-top: 30px;
-  box-shadow: 5px 5px 20px 5px #D0D0D0;
-}
-
-.searchbox {
-  /* 검색창 박스 */
-  background-color: #F2F2F2;
-  border-radius: 15px;
-  height: auto;
-  width: auto;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  box-shadow: 5px 5px 20px 5px #D0D0D0;
-}
-
-#keyword {
-  /* 검색창 */
-  background-color: #F2F2F2;
 }
