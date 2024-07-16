@@ -1,26 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <title>카카오맵</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div id="map"></div>
-    <div id="pagination"></div>
-    <div id="pagination2"></div>
-    <div class="search-container">
-        <span class="search-icon" onclick="toggleSearch()">🔍</span>
-        <input type="text" id="search-start" placeholder="출발지" onkeypress="handleSearch(event)">
-        <span class="search-icon" onclick="onOffSearch()">🔍</span>
-        <input type="text" id="search-end" placeholder="도착지" onkeypress="searchHandle(event)">
-    </div>
-    <div id="coordinates" class="coordinates">
-        <p id="start-coords">출발지 좌표: </p>
-        <p id="end-coords">도착지 좌표: </p>
-        <p id="distance">거리: </p> <!-- 거리 표시용 p 태그 추가 -->
-    </div>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=8fa6250a0ecb635c10de0eb564e22c52&libraries=services"></script>
     <script src="main.js"></script>
 </body>
+
 </html>
