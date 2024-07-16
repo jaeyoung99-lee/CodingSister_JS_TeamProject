@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://img.icons8.com/emoji/48/cloud-emoji.png" />
+    <title>Document</title>
+    <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <!-- 사용자 정의 CSS -->
+    <link rel="stylesheet" href="./css/main.css" />
+    <link rel="stylesheet" href="./css/category.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <!-- 날씨2 -->
+        <div class="col-6">
+          <div class="searchbox">
+            <!-- 검색창 -->
+            <form onsubmit="searchPlaces(); return false;">
+              <div class="form-floating">
+                <input
+                  type="search"
+                  class="form-control my-2"
+                  id="keyword"
+                  name="keyword"
+                  placeholder="Search Place"
+                />
+                <label for="floatingInput">Search Place</label>
+              </div>
+            </form>
+          </div>
+
+          <div class="weatherbox">
+            <!-- 현재 위치 날씨 박스 -->
+            <div id="current">
+              <span id="currentName"> 현재 위치 </span>
+              <div class="rowScroll" id="CurrentRowScroll"></div>
+              <!-- 날씨 가로 스크롤 -->
+              <div id="CurrentTemperature"></div>
+              <!-- 오늘/내일 - 최저/최고 기온-->
+            </div>
+          </div>
+
+          <div class="weatherbox">
+            <!-- 검색 위치 날씨 박스 -->
+            <div id="search">
+              <span id="searchName"></span>
+              <div class="rowScroll" id="SearchRowScroll"></div>
+              <!-- 날씨 가로 스크롤 -->
+              <div id="SearchTemperature"></div>
+              <!-- 오늘/내일 - 최저/최고 기온-->
+            </div>
+          </div>
+        </div>
+        <!-- 지도 -->
+        <div class="col-6">
+          <div class="addrbox">
+            <!-- 지도 중심 주소 박스 -->
+            <div class="addr">
+              <!-- 주소 -->
+              <span id="centerAddr"></span>
+            </div>
+          </div>
+
+          <div class="map_wrap">
+            <div id="map"></div>
+            <ul id="category">
+              <li id="BK9" data-order="0">
+                <span class="category_bg bank"></span>
+                은행
+              </li>
+              <li id="MT1" data-order="1">
+                <span class="category_bg mart"></span>
+                마트
+              </li>
+              <li id="PM9" data-order="2">
+                <span class="category_bg pharmacy"></span>
+                약국
+              </li>
+              <li id="OL7" data-order="3">
+                <span class="category_bg oil"></span>
+                주유소
+              </li>
+              <li id="CE7" data-order="4">
+                <span class="category_bg cafe"></span>
+                카페
+              </li>
+              <li id="CS2" data-order="5">
+                <span class="category_bg store"></span>
+                편의점
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5dc0a8b0568d40023839fd8a294ef4be&libraries=services"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/map.js"></script>
+  </body>
+</html>

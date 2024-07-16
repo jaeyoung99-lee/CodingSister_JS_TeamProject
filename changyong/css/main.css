@@ -1,0 +1,144 @@
+@charset "utf-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&display=swap'); /* font -  NotoSansKorean */
+
+body {
+  margin: 0;
+  height: 100vh;
+  background-image: linear-gradient(to top, #f3e7e9 0%, #e4eefd 99%, #e7f0ff 100%);
+}
+
+* {
+  /* 전체 글씨체 적용 */
+  font-family: 'Noto Sans KR', sans-serif;
+} 
+
+.container {
+  padding: 20px;
+}
+
+#map {
+  /* 지도 */
+  height: 820px;
+}
+
+.rowScroll {
+  /* 가로 스크롤 */
+  width: 600px;
+  padding: 20px;
+  overflow: scroll;
+  white-space: nowrap;
+}
+
+.rowScroll::-webkit-scrollbar {
+  /* 가로 스크롤 바 */
+  display: none; 
+}
+
+.card {
+  /* 카드 */
+  display: inline-block;
+  text-align: center;
+  background-image: linear-gradient(to top, #fff3ed 0%, #d8f1fc 100%);
+}
+
+#current {
+  /* 현재위치 박스 */
+  padding: 5px;
+}
+
+#search {
+  /* 검색위치 박스 */
+  padding: 5px;
+}
+
+#currentName, #searchName {
+  /* 현재위치/검색위치 박스 제목 */
+  font-size: 15pt;
+  font-weight: 600;
+}
+
+#weatherIcon {
+  /* 날씨 아이콘 */
+  width: 5rem;
+  height: 5rem;
+  padding-top: 0.2rem;
+}
+
+.card-text {
+  /* 카드 글씨 */
+  padding-top: 0.6rem;
+}
+
+.day {
+  /* 오늘 / 내일 */
+  font-weight: 500;
+  font-size: 14pt;
+}
+
+.daydate {
+  /* 오늘 / 내일의 날짜 */
+  padding-right: 1rem;
+}
+
+.daylow {
+  /* 최저 기온 */
+  font-size: 13pt;
+  color: crimson;
+}
+
+.dayhigh {
+  /* 최고 기온 */
+  font-size: 13pt;
+  color: blue;
+}
+
+.map_wrap {
+  /* 지도 박스 */
+  background-color: #F2F2F2;
+  border-radius: 15px;
+  padding: 15px;
+  height: auto;
+  width: auto;
+  box-shadow: 5px 5px 20px 5px #D0D0D0;
+}
+
+.addrbox {
+  /* 지도 중심 좌표 주소 박스 */
+  background-color: #F2F2F2;
+  border-radius: 15px;
+  padding: 15px;
+  height: auto;
+  width: auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  box-shadow: 5px 5px 20px 5px #D0D0D0;
+}
+
+.weatherbox {
+  /* 날씨 박스 */
+  background-color: #F2F2F2;
+  border-radius: 15px;
+  padding: 15px;
+  height: auto;
+  width: auto;
+  margin-bottom: 20px;
+  margin-top: 30px;
+  box-shadow: 5px 5px 20px 5px #D0D0D0;
+}
+
+.searchbox {
+  /* 검색창 박스 */
+  background-color: #F2F2F2;
+  border-radius: 15px;
+  height: auto;
+  width: auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  box-shadow: 5px 5px 20px 5px #D0D0D0;
+}
+
+#keyword {
+  /* 검색창 */
+  background-color: #F2F2F2;
+}
