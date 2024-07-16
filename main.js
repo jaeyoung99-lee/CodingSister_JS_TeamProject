@@ -140,22 +140,6 @@ function removeMarker2() {
     markers2 = [];
 }
 
-function updatePolyline() {
-    if (startCoords && endCoords) {
-        var path = [
-            new kakao.maps.LatLng(startCoords.lat, startCoords.lng),
-            new kakao.maps.LatLng(endCoords.lat, endCoords.lng)
-        ];
-        
-        polyline.setPath(path);
-        polyline.setMap(map);
-
-        // 거리 계산
-        var distance = getDistance(startCoords.lat, startCoords.lng, endCoords.lat, endCoords.lng);
-        document.getElementById('distance').textContent = '거리: ' + distance.toFixed(2) + ' km';
-    }
-}
-
 function getDistance(lat1, lng1, lat2, lng2) {
     var R = 6371; // 지구의 반경 (킬로미터)
     var dLat = toRad(lat2 - lat1);
@@ -165,10 +149,6 @@ function getDistance(lat1, lng1, lat2, lng2) {
             Math.sin(dLng / 2) * Math.sin(dLng / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
-}
-
-function toRad(degrees) {
-    return degrees * Math.PI / 180;
 }
 
 function displayPagination(pagination) {
