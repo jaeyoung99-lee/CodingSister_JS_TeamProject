@@ -1,3 +1,14 @@
+// 카테고리별 총 장소의 수를 저장할 객체
+let categoryCounts = {
+  BK9: 0,
+  MT1: 0,
+  PM9: 0,
+  OL7: 0,
+  CE7: 0,
+  CS2: 0
+};
+
+let totalPlacesCount = 0;  // 총 검색 결과의 개수를 저장할 변수
 
 // 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
 const addEventHandle = (target, type, callback) => {
@@ -20,14 +31,29 @@ const searchPlaces = () => {
   // 지도에 표시되고 있는 마커를 제거합니다
   removeMarker();
   
-  ps.categorySearch(currCategory, placesSearchCB, {useMapBounds: true}); 
+  ps.categorySearch(currCategory, placesSearchCB, {location: map.getCenter(), radius: 1000}); 
 }
 
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
-const placesSearchCB = (data, status, pagination) => {
+const placesSearchCB = (data, status, _pagination) => {
   if (status === kakao.maps.services.Status.OK) {
       // 정상적으로 검색이 완료됐으면 지도에 마커를 표출합니다
       displayPlaces(data);
+      
+      categoryCounts[currCategory] += data.length;
+      console.log(`현재 카테고리(${currCategory})의 총 장소 수: ${categoryCounts[currCategory]}`);
+
+      // 현재 페이지의 결과 수를 추가하여 총 검색 결과 수를 업데이트합니다
+      totalPlacesCount += data.length;
+      console.log(`현재까지 검색된 총 장소의 수: ${totalPlacesCount}`);
+
+      pagination = _pagination; // 페이지네이션 객체 저장
+
+      // 다음 페이지가 있을 경우 추가로 검색
+      if (pagination.hasNextPage) {
+          pagination.nextPage();
+      }
+
   } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
       // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
       console.log("검색 결과가 없습니다.");

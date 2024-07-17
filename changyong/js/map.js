@@ -3,7 +3,8 @@ let placeOverlay = new kakao.maps.CustomOverlay({zIndex:1}),
     contentNode = document.createElement('div'),
     markers = [],  // 'makers' 오타 수정
     markerList = [],  // 'makers' 오타 수정
-    currCategory = '';
+    currCategory = '',
+    pagination = null;
 
 // 지도 생성
 let mapContainer = document.getElementById('map'),
@@ -32,8 +33,6 @@ function currentMap(position) {
     console.log("현재 위치 좌표", lng, lat);
 
     map.setCenter(new kakao.maps.LatLng(lat, lng)); // 지도 중심
-    currCategory = 'BK9'; // 초기 카테고리 설정 (예: 은행)
-    searchPlaces(); // 현재 위치 기준으로 장소 검색 시작
 }
 
 // 중심 좌표나 확대 수준이 변경됐을 때 -> 지도 중심 주소 정보 변경, 마커 위치 변경
