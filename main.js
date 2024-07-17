@@ -9,8 +9,10 @@ let markers = [];
 let bounds = new kakao.maps.LatLngBounds();
 const ps = new kakao.maps.services.Places();
 const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+const geocoder = new kakao.maps.services.Geocoder(); 
 
-// 맵 초기화 및 설정
+
+
 const initMap = () => {
   const mapContainer = document.getElementById("map");
 
@@ -42,8 +44,19 @@ const initMap = () => {
     resultDiv.innerHTML = message;
   });
 
-  const changeCenterButton = document.getElementById("changeCenterButton");
-  changeCenterButton.addEventListener("click", () => changeCenter(center));
+// 맵 초기화 및 설정
+navigator.geolocation.getCurrentPosition((position) => {
+  currentMap(position);
+});
+
+// 현재 위치를 중심으로 지도 중심 변경 & 주소 & 현재 위치 날씨
+const currentMap=(position)=> {
+  const lat = position.coords.latitude; // 위도
+  const lng = position.coords.longitude; // 경도
+  console.log("현재 위치 좌표", lng, lat);
+
+  map.setCenter(new kakao.maps.LatLng(lat, lng)); // 지도 중심
+}
 };
 
 // 출발지, 도착지 검색
