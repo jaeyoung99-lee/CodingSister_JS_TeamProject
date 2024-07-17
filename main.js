@@ -11,8 +11,6 @@ const ps = new kakao.maps.services.Places();
 const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 const geocoder = new kakao.maps.services.Geocoder(); 
 
-
-
 const initMap = () => {
   const mapContainer = document.getElementById("map");
 
@@ -289,7 +287,7 @@ dropdown.addEventListener("click", () => {
 
 window.onload = initMap;
 
-const weatherApiKey = config.weatherApiKey;
+const weatherApiKey = weatherapiKey;
 
 const getWeather = async (city) => {
   const encodedCity = encodeURIComponent(city);
