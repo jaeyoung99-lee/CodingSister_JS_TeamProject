@@ -27,6 +27,12 @@
                         <p id="start-coords">출발지 좌표: </p>
                         <p id="end-coords">도착지 좌표: </p>
                     </div>
+                    <h1>현재 날씨</h1>
+                    <form id="search-form">
+                        <input type="text" id="city-input" placeholder="도시를 입력하세요!" required>
+                        <button type="submit">search</button>
+                    </form>
+                    <div id="weather"></div>
                 </div>
             </div>
             <div class="col-lg-10" id="map">
@@ -101,6 +107,7 @@
           initMap();
         });
       </script>
+
 </body>
 
 </html>
