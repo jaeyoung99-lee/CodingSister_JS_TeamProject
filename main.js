@@ -11,8 +11,6 @@ const ps = new kakao.maps.services.Places();
 const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 const geocoder = new kakao.maps.services.Geocoder(); 
 
-
-
 const initMap = () => {
   const mapContainer = document.getElementById("map");
 
@@ -146,7 +144,7 @@ const removeMarkers = () => {
 
 // 출발지, 도착지 사이의 차량 경로
 const getCarDirection = async () => {
-  const REST_API_KEY = restApiKey;
+  const REST_API_KEY = config.restApiKey;
   const url = 'https://apis-navi.kakaomobility.com/v1/directions';
   
   if (!origin || !destination) {
@@ -289,7 +287,7 @@ dropdown.addEventListener("click", () => {
 
 window.onload = initMap;
 
-const weatherApiKey = config.weatherApiKey;
+const weatherApiKey = config.weatherapiKey;
 
 const getWeather = async (city) => {
   const encodedCity = encodeURIComponent(city);
