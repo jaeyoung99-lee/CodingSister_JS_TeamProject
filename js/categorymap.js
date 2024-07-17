@@ -1,15 +1,3 @@
-// 카테고리별 총 장소의 수를 저장할 객체
-let categoryCounts = {
-  BK9: 0,
-  MT1: 0,
-  PM9: 0,
-  OL7: 0,
-  CE7: 0,
-  CS2: 0
-};
-
-let totalPlacesCount = 0;  // 총 검색 결과의 개수를 저장할 변수
-
 // 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
 const addEventHandle = (target, type, callback) => {
   if (target.addEventListener) {
@@ -20,7 +8,7 @@ const addEventHandle = (target, type, callback) => {
 }
 
 // 카테고리 검색을 요청하는 함수입니다
-const searchPlaces = () => {
+const searchPlacesCategory = () => {
   if (!currCategory) {
       return;
   }
@@ -150,7 +138,7 @@ const onClickCategory = function() {
   } else {
       currCategory = id;
       changeCategoryClass(this);
-      searchPlaces();
+      searchPlacesCategory();
   }
 }
 
@@ -167,7 +155,7 @@ const changeCategoryClass = el => {
 }
 
 // 지도에 idle 이벤트를 등록합니다
-kakao.maps.event.addListener(map, 'idle', searchPlaces);
+kakao.maps.event.addListener(map, 'idle', searchPlacesCategory);
 
 // 커스텀 오버레이의 컨텐츠 노드에 css class를 추가합니다 
 contentNode.className = 'placeinfo_wrap';
