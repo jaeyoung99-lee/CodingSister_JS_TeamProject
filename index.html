@@ -23,6 +23,18 @@
                     <button id="changeCenterButton">현재 위치로 중심 이동</button>
                     <div id="clickLatlng"></div>
                     <div id="between-distance"></div>
+
+                    <div class="search-container">
+                        <span class="search-icon" onclick="toggleSearch()">🔍</span>
+                        <input type="text" id="search-start" placeholder="출발지" onkeypress="handleSearch(event)">
+                        <span class="search-icon" onclick="onOffSearch()">🔍</span>
+                        <input type="text" id="search-end" placeholder="도착지" onkeypress="searchHandle(event)">
+                    </div>
+                    <div id="coordinates" class="coordinates">
+                        <p id="start-coords">출발지 좌표: </p>
+                        <p id="end-coords">도착지 좌표: </p>
+                        <p id="distance">거리: </p>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-10" id="map">
@@ -62,7 +74,7 @@
     <div class="overlay"></div>
 
     <script src="apikey.js"></script>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=09dd7c8905925daabacd70380aa9a3b2"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=09dd7c8905925daabacd70380aa9a3b2&libraries=services"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="main.js"></script>
 </body>
