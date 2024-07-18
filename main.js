@@ -6,6 +6,26 @@ let endMarker = null;
 let origin = '';
 let destination = '';
 let markers = [];
+
+// 해당 장소의 상세정보를 보여줄 커스텀오버레이
+let placeOverlay = new kakao.maps.CustomOverlay({zIndex:1});
+let contentNode = document.createElement('div')
+let markerList = [];
+let currCategory = '';
+let pagination = null;
+
+// 카테고리별 총 장소의 수를 저장할 객체
+let categoryCounts = {
+  BK9: 0,
+  MT1: 0,
+  PM9: 0,
+  OL7: 0,
+  CE7: 0,
+  CS2: 0
+};
+
+let totalPlacesCount = 0;  // 총 검색 결과의 개수를 저장할 변수
+
 let bounds = new kakao.maps.LatLngBounds();
 const ps = new kakao.maps.services.Places();
 const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
