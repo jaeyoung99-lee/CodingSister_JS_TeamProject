@@ -63,6 +63,10 @@ p {
     height: 100%;
 }
 
+.location-info{
+  display: none;
+}
+
 /* 사이드 메뉴 */
 .sidenav {
     height: 100%;
