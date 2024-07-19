@@ -17,15 +17,14 @@
                     <div id="clickLatlng"></div>
                     <div id="between-distance"></div>
                     <div class="search-container">
-                        <span class="search-icon" onclick="toggleSearch()">🔍</span>
-                        <input type="text" id="search-start" placeholder="출발지" onkeypress="handleSearch(event)">
-                        <span class="search-icon" onclick="onOffSearch()">🔍</span>
-                        <input type="text" id="search-end" placeholder="도착지" onkeypress="searchHandle(event)">
+                        <span class="search-icon" onclick="handleSearch()">🔍</span>
+                        <input type="text" id="search-start" placeholder="검색" onkeypress="handleSearch(event)">
                     </div>
-                    <div id="coordinates" class="coordinates">
-                        <p id="start-coords">출발지 좌표: </p>
-                        <p id="end-coords">도착지 좌표: </p>
+                    <div class="location-info">
+                      <div id="start-info">출발지 :</div>
+                      <div id="end-info">도착지 :</div>
                     </div>
+       
                     <div class="weatherContainer">
                         <h1>현재 날씨</h1>
                         <form id="search-form">

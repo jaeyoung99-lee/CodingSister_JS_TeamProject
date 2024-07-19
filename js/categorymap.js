@@ -1,3 +1,21 @@
+let placeOverlay = new kakao.maps.CustomOverlay({zIndex:1});
+let contentNode = document.createElement('div')
+let markerList = [];
+let currCategory = '';
+let pagination = null;
+
+// 카테고리별 총 장소의 수를 저장할 객체
+let categoryCounts = {
+  BK9: 0,
+  MT1: 0,
+  PM9: 0,
+  OL7: 0,
+  CE7: 0,
+  CS2: 0
+};
+
+let totalPlacesCount = 0;  // 총 검색 결과의 개수를 저장할 변수
+
 // 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
 const addEventHandle = (target, type, callback) => {
   if (target.addEventListener) {
