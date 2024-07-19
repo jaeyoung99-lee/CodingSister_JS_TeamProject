@@ -1,5 +1,5 @@
 let map;
-let center = { lat: 33.452613, lng: 126.570888 };
+let center = { lat: null, lng: null };
 let startMarker = null;
 let endMarker = null;
 let origin = '';
