@@ -67,7 +67,7 @@ function displayMarker(place) {
     kakao.maps.event.addListener(marker, 'mouseover', function () {
         if (!infowindowOpen) {
             let content = '<div style="padding:5px;font-size:15px;font-family:Arial, Helvetica, sans-serif;">' +
-                place.place_name;
+                place.place_name + '</div>';
             infowindow.setContent(content);
             infowindow.open(map, marker);
         }
@@ -81,7 +81,7 @@ function displayMarker(place) {
 
     kakao.maps.event.addListener(marker, 'click', function () {
         let infowindowContent = '<div style="padding:5px;font-size:15px;font-family:Arial, Helvetica, sans-serif;">' +
-                place.place_name;
+            place.place_name + '</div>';
         infowindow.setContent(infowindowContent);
         infowindow.open(map, marker);
         infowindowOpen = true;
@@ -95,11 +95,6 @@ function displayMarker(place) {
     });
 
     markers.push(marker);
-}
-
-function closeInfowindow() {
-    infowindow.close();
-    infowindowOpen = false;
 }
 
 function removeMarker() {
@@ -139,11 +134,7 @@ function displayPagination(pagination) {
 function scrollToTop() {
     let menuWrap = document.getElementById('menu_wrap');
     if (menuWrap) {
-        menuWrap.classList.add('scroll-to-top');
         menuWrap.scrollTop = 0;
-        setTimeout(function () {
-            menuWrap.classList.remove('scroll-to-top');
-        }, 500);
     } else {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -226,7 +217,7 @@ function toggleFavorite(element, index) {
 
     displayFavorites();
 }
-       
+
 function displayFavorites() {
     let favoritesList = document.getElementById('favoritesList');
     removeAllChildNodes(favoritesList);
@@ -270,6 +261,31 @@ function removeFavorite(index) {
 }
 
 document.getElementById('search-button').addEventListener('click', searchPlaces);
-kakao.maps.event.addListener(map, 'zoom_changed', function () {
-    searchPlaces();
+kakao.maps.event.addListener(map, 'zoom_changed', searchPlaces);
+
+document.querySelector('.search-tab').addEventListener('click', () => {
+    document.getElementById('search-bar').focus();
+});
+
+document.querySelector('.liked-tab').addEventListener('click', () => {
+    document.getElementById('favorites').scrollIntoView({ behavior: 'smooth' });
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        document.querySelector('.tab.active').classList.remove('active');
+        tab.classList.add('active');
+
+        if (tab.classList.contains('search-tab')) {
+            document.querySelector('.search-container').style.display = 'block';
+            document.getElementById('placesList').style.display = 'block';
+            document.getElementById('pagination').style.display = 'block';
+            document.getElementById('favorites').style.display = 'none';
+        } else {
+            document.querySelector('.search-container').style.display = 'none';
+            document.getElementById('placesList').style.display = 'none';
+            document.getElementById('pagination').style.display = 'none';
+            document.getElementById('favorites').style.display = 'block';
+        }
+    });
 });
