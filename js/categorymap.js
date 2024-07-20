@@ -43,7 +43,6 @@ const placesSearchCB = (data, status, _pagination) => {
     displayPlaces(data);
     updateCategoryCounts(data.length);
     totalPlacesCount += data.length;
-    console.log(`현재까지 검색된 총 장소의 수: ${totalPlacesCount}`);
 
     pagination = _pagination;
     if (pagination.hasNextPage) pagination.nextPage();
