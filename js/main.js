@@ -230,7 +230,9 @@ const getCarDirection = async () => {
     const mapTaxiFare = new Intl.NumberFormat().format(mapTaxiFareValue);
 
     const distanceDiv = document.getElementById("between-distance");
-    distanceDiv.innerHTML = `${mapDistance} ${mapCarTime} ${mapTaxiFare}원 ${mapWalk}`;
+    distanceDiv.innerHTML += `<div><i class="fa-solid fa-car"></i> ${mapDistance} ${mapCarTime} ${mapTaxiFare}원</div>`
+    distanceDiv.innerHTML += `<div><i class="fa-solid fa-person-walking"></i>${mapWalk}</div>`
+    // distanceDiv.innerHTML = `${mapDistance} ${mapCarTime} ${mapTaxiFare}원 ${mapWalk}`;
 
     const linePath = [];
     data.routes[0].sections[0].roads.forEach(router => {
