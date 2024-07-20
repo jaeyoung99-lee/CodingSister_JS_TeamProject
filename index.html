@@ -36,15 +36,15 @@
                     <div class="buttons">
                       <div id="clickLatlng"></div>
                       <div class="search-container">
-                          <span class="search-icon" onclick="handleSearch()">🔍</span>
-                          <input type="text" id="search-start" placeholder="검색" onkeypress="handleSearch(event)">
+                      <span class="search-icon" onclick="handleSearch()">🔍</span>
+                      <input type="text" id="search-start" placeholder="출발지 검색..." />
+                      <input type="text" id="search-end" placeholder="도착지 검색..." />
+                      <button onclick="handleSearch()">출발!</button>
                       </div>
                       <div class="location-info">
-                        <div id="start-info">출발지 :</div>
-                        <div id="end-info">도착지 :</div>
-                      </div>
-                      <div id="between-distance"></div>
+                        <div id="between-distance"></div>
                     </div>
+                  </div>
                   </div>
                   <div class="tab-pane fade" id="nav-weather" role="tabpanel" aria-labelledby="nav-weather-tab" tabindex="0">
                     <div class="weatherContainer">
@@ -56,6 +56,12 @@
                       <div id="weather"></div>
                   </div>
                   </div>
+                  <div class="tab-pane fade" id="nav-liked" role="tabpanel" aria-labelledby="nav-liked-tab" tabindex="0">
+                    <div id="favorites">
+                      <h2>찜 목록</h2>
+                      <ul id="favoritesList"></ul>
+                  </div>                
+                </div>
                   <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">...</div>
                 </div>
             </div>
@@ -118,9 +124,11 @@
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=599b882080db6119ba382e1ca3eddee0&libraries=services"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/b4957b2c73.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="js/config.js"></script>
     <script src="js/weather.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/search.js"></script>
     <script>
         kakao.maps.load(() => {
             initMap();

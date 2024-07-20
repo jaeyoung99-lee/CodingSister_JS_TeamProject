@@ -28,6 +28,12 @@ h1 {
   color: #333;
 }
 
+h2{
+  padding: 10px;
+  font-size: 20px;
+  border-bottom:1px solid #cacaca;
+  text-align: center;
+}
 #search-form {
   margin-bottom: 20px;
 }
@@ -393,4 +399,155 @@ p {
 
 .search-container {
     margin-top: 1rem; /* Adjust this value to increase or decrease the gap */
+}
+.search-icon {
+  cursor: pointer;
+}
+#search-bar {
+  display: inline-block;
+  padding: 5px;
+  width: 200px;
+}
+
+#pagination {
+  text-align: center;
+  margin-top: 10px;
+}
+
+#pagination a {
+  text-decoration: none;
+  font-family: monospace;
+  color: #606060;
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 5px;
+  background-color: #bbbbbb;
+  border: 1px solid #8a8a8a;
+  cursor: pointer;
+  border-radius: 3px;
+  box-shadow: 3px 3px 2px rgba(0, 0, 0, 0.5);
+  background-image: linear-gradient(to bottom, #ffffff, #ababab);
+  transition: background-color 0.3s ease;
+}
+
+#pagination a:hover {
+  background-image: linear-gradient(to bottom, #c4c4c4, #ffffff);
+}
+
+#pagination a.on {
+  background-color: #f2f2f2;
+  background-image: linear-gradient(to bottom, #767676, #d3d3d3);
+  border-color: #999;
+}
+#placesList {
+  list-style: none;
+  padding: 0;
+}
+
+#placesList .item {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+#placesList .item h5 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#placesList .item:hover {
+  color: #4CAF50;
+}
+
+.info .road-address {
+  color: #808080;
+  font-size: 12px;
+}
+
+.info .jibun {
+  color: #808080;
+  font-size: 12px;
+}
+
+.info .tel {
+  color: #4CAF50;
+  font-size: 14px;
+}
+
+.scroll-to-top {
+  scroll-behavior: smooth;
+}
+
+.get-moreinfo {
+  font-size: 12px;
+  color: #1100d1;
+  font-family: sans-serif;
+  text-decoration: underline;
+}
+
+.place-name {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.jibun,
+.tel {
+  font-size: 12px;
+  color: #808080;
+}
+
+.infowindow-content {
+  padding: 5px;
+  font-size: 12px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.favorite-icon {
+  cursor: pointer;
+  color: rgb(158, 158, 158);
+  font-size: 20px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.favorite-icon:hover {
+  color: rgb(106, 106, 106);
+}
+
+.favorite-icon.active {
+  color: rgb(255, 0, 0);
+}
+
+.item {
+  position: relative;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.search-container {
+  position: relative;
+}
+
+#favorites {
+  padding: 0;
+  margin: 0;
+}
+
+#favoritesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+#favoritesList .item {
+  margin-left: 0; /* Remove any extra left margin */
+  padding-left: 0; /* Remove any extra left padding */
 }
