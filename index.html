@@ -54,33 +54,51 @@
           </div>
         </div>
         <div class="col-lg-10" id="map">
-          <div>
-            <ul id="category">
-              <li id="BK9" data-order="0">
-                <span class="category_bg bank"></span>
-                은행
-              </li>
-              <li id="MT1" data-order="1">
-                <span class="category_bg mart"></span>
-                마트
-              </li>
-              <li id="PM9" data-order="2">
-                <span class="category_bg pharmacy"></span>
-                약국
-              </li>
-              <li id="OL7" data-order="3">
-                <span class="category_bg oil"></span>
-                주유소
-              </li>
-              <li id="CE7" data-order="4">
-                <span class="category_bg cafe"></span>
-                카페
-              </li>
-              <li id="CS2" data-order="5">
-                <span class="category_bg store"></span>
-                편의점
-              </li>
-            </ul>
+          <div id="category-container">
+            <button id="prev-btn" onclick="scrollCategories(-1)">
+              &#9664;
+            </button>
+            <div id="category-wrapper">
+              <ul id="category">
+                <li id="BK9" data-order="0">
+                  <span class="category_bg bank"></span>
+                  은행
+                </li>
+                <li id="MT1" data-order="1">
+                  <span class="category_bg mart"></span>
+                  마트
+                </li>
+                <li id="PM9" data-order="2">
+                  <span class="category_bg pharmacy"></span>
+                  약국
+                </li>
+                <li id="OL7" data-order="3">
+                  <span class="category_bg oil"></span>
+                  주유소
+                </li>
+                <li id="CE7" data-order="4">
+                  <span class="category_bg cafe"></span>
+                  카페
+                </li>
+                <li id="CS2" data-order="5">
+                  <span class="category_bg store"></span>
+                  편의점
+                </li>
+                <li id="FD6" data-order="6">
+                  <span class="category_bg restaurant"></span>음식점
+                </li>
+                <li id="HP8" data-order="7">
+                  <span class="category_bg hospital"></span>병원
+                </li>
+                <li id="AT4" data-order="8">
+                  <span class="category_bg attraction"></span>관광지
+                </li>
+                <li id="AD5" data-order="9">
+                  <span class="category_bg hotel"></span>숙박
+                </li>
+              </ul>
+            </div>
+            <button id="next-btn" onclick="scrollCategories(1)">&#9654;</button>
           </div>
         </div>
       </div>
@@ -138,7 +156,6 @@
     </div>
     <div class="overlay"></div>
 
-    <script src="js/config.js"></script>
     <script
       type="text/javascript"
       src="//dapi.kakao.com/v2/maps/sdk.js?appkey=09dd7c8905925daabacd70380aa9a3b2&libraries=services"
@@ -148,6 +165,8 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="js/config.js"></script>
+    <script src="js/weather.js"></script>
     <script src="js/main.js"></script>
     <script>
       kakao.maps.load(() => {
