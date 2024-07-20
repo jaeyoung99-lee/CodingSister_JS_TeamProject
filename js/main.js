@@ -13,6 +13,8 @@ const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 const geocoder = new kakao.maps.services.Geocoder();
 
 const initMap = () => {
+  if (map) return;
+  
   const mapContainer = document.getElementById("map");
 
   const mapOptions = {
@@ -48,16 +50,6 @@ const handleSearch = () => {
 const searchHandle = () => {
   searchPlaces('search-end', placesSearchCallback);
 }
-
-// 현재 위치를 가져오는 함수
-const getCurrentPosition = () => {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      position => resolve(position),
-      error => reject(error)
-    );
-  });
-};
 
 /// 출발지 또는 도착지 선택
 const selectLocation = async (lat, lng, type, placeName) => {
@@ -133,7 +125,6 @@ const searchPlaces = (inputId, callback) => {
   const keyword = document.getElementById(inputId).value.trim();
 
   if (!keyword) {
-    alert('키워드를 입력해주세요!');
     return false;
   }
 
@@ -317,5 +308,42 @@ dropdown.addEventListener("click", () => {
     drop_icon2.style.display = "inline-flex";
   }
 });
+
+const micButton = document.getElementById('start-mic');
+const searchStart = document.getElementById('search-start');
+
+const startRecord = () => {
+  if ('webkitSpeechRecognition' in window) {
+    const keywordRecord = new webkitSpeechRecognition();
+    keywordRecord.lang = 'ko-KR'; // 한국어 설정
+
+    keywordRecord.onstart = () => {
+      console.log('음성 인식 시작');
+    };
+
+    keywordRecord.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      searchStart.value = transcript;
+      console.log('음성 인식 결과:', transcript);
+
+      // 음성 인식 결과로 장소 검색 수행
+      handleSearch();
+    };
+
+    keywordRecord.onerror = (event) => {
+      console.error('음성 인식 오류:', event.error);
+    };
+
+    keywordRecord.onend = () => {
+      console.log('음성 인식 종료');
+    };
+
+    keywordRecord.start();
+  } else {
+    alert('음성 인식 API를 지원하지 않는 브라우저입니다.');
+  }
+};
+
+micButton.addEventListener('click', startRecord);
 
 window.onload = initMap;
