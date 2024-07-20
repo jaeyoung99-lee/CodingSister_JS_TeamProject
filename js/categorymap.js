@@ -5,21 +5,24 @@ let currCategory = "";
 let pagination = null;
 const categoryCounts = { BK9: 0, MT1: 0, PM9: 0, OL7: 0, CE7: 0, CS2: 0, FD6: 0, HP8: 0, AT4: 0, AD5: 0 };
 let totalPlacesCount = 0;
-let currentIndex = 0;   // 현재 인덱스
 
 // 상수로 분리한 마커 이미지 설정
-const MARKER_IMAGE_SRC = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png';
 const MARKER_IMAGE_SIZE = new kakao.maps.Size(27, 28);
 const SPRITE_SIZE = new kakao.maps.Size(72, 208);
 const SPRITE_OFFSET = new kakao.maps.Point(11, 28);
 
-const PLACEHOLDER_IMAGES = {
-  FD6: 'https://via.placeholder.com/27x28/ff0000/ffffff?text=R&shape=sign',
-  HP8: 'https://via.placeholder.com/27x28/ff0000/ffffff?text=H&shape=sign',
-  AT4: 'https://via.placeholder.com/27x28/ff0000/ffffff?text=A&shape=sign',
-  AD5: 'https://via.placeholder.com/27x28/ff0000/ffffff?text=HT&shape=sign'
+const ICONS = {
+  BK9: 'fa-university',
+  MT1: 'fa-shopping-cart',
+  PM9: 'fa-prescription-bottle',
+  OL7: 'fa-gas-pump',
+  CE7: 'fa-coffee',
+  CS2: 'fa-store',
+  FD6: 'fa-utensils',
+  HP8: 'fa-hospital',
+  AT4: 'fa-landmark',
+  AD5: 'fa-hotel'
 };
-
 
 // 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
 const addEventHandle = (target, type, callback) => {
@@ -75,29 +78,30 @@ const displayPlaces = (places) => {
   const order = document.getElementById(currCategory).getAttribute('data-order');
   
   places.forEach(place => {
-    const marker = addMarker(new kakao.maps.LatLng(place.y, place.x), order, place.category_group_code);
-    kakao.maps.event.addListener(marker, "click", () => displayPlaceInfo(place));
+    const marker = addMarker(new kakao.maps.LatLng(place.y, place.x), order, place.category_group_code, place);
   });
 }
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
-const addMarker = (position, order, categoryCode) => {
-  let markerImage;
-  if (PLACEHOLDER_IMAGES[categoryCode]) {
-    const imgSrc = PLACEHOLDER_IMAGES[categoryCode];
-    markerImage = new kakao.maps.MarkerImage(imgSrc, MARKER_IMAGE_SIZE);
-  } else {
-    const imgOptions = {
-      spriteSize: SPRITE_SIZE,
-      spriteOrigin: new kakao.maps.Point(46, order * 36),
-      offset: SPRITE_OFFSET
-    };
-    markerImage = new kakao.maps.MarkerImage(MARKER_IMAGE_SRC, MARKER_IMAGE_SIZE, imgOptions);
-  }
 
-  const marker = new kakao.maps.Marker({ position, image: markerImage });
+const addMarker = (position, order, categoryCode, place) => {
+  const iconClass = ICONS[categoryCode] || 'fa-map-marker-alt';
+  const markerContent = document.createElement('div');
+  markerContent.className = 'marker';
+  markerContent.innerHTML = `<i class="fas ${iconClass}"></i>`;
+
+  const marker = new kakao.maps.CustomOverlay({
+    position: position,
+    content: markerContent,
+    yAnchor: 1
+  });
+
   marker.setMap(map);
   markerList.push(marker);
+
+  // 마커 클릭 이벤트 추가
+  markerContent.addEventListener('click', () => displayPlaceInfo(place, marker));
+
   return marker;
 }
 
@@ -123,14 +127,6 @@ const displayPlaceInfo = (place) => {
   contentNode.innerHTML = content;
   placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
   placeOverlay.setMap(map);  
-}
-
-const scrollCategories = (direction) => {
-  const category = document.getElementById("category");
-  const maxIndex = category.children.length - 5; // 5개의 카테고리만 보이도록 설정
-  currentIndex = Math.max(0, Math.min(maxIndex, currentIndex + direction));
-  const scrollAmount = currentIndex * 50; // 한 카테고리의 폭
-  category.style.transform = `translateX(-${scrollAmount}px)`;
 }
 
 // 각 카테고리에 클릭 이벤트를 등록하는 함수입니다
