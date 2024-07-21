@@ -1,7 +1,15 @@
+@font-face {
+  font-family: 'Cafe24Moyamoya-Regular-v1.0';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/Cafe24Moyamoya-Regular-v1.0.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body{
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-family: 'Cafe24Moyamoya-Regular-v1.0';
 }
 
 .weatherContainer {
@@ -359,4 +367,19 @@ p {
 .marker i {
   color: #ff0000;
   font-size: 18px;
+}
+
+.tab-content{
+  padding: 20px 10px;
+}
+
+.search-box{
+  font-size: 20px;
+  width: 200px;
+  border: 0;
+  border-radius: 15px;
+  outline: none;
+  padding-left: 10px;
+  background-color: rgb(233, 233, 233);
+  margin-top: 10px;
 }
