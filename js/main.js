@@ -241,19 +241,52 @@ const displaySearchResults = (data, inputType) => {
     container.innerHTML = ''; // Clear previous results
     console.log('Displaying search results'); // Log for debugging
 
-    data.forEach(place => {
+    data.forEach((place, index) => {
         const resultItem = document.createElement('div');
         resultItem.className = 'search-result-item';
+        
+        // Check if the place is already in favorites
+        const isFavorite = favorites.some(fav => fav.name === place.place_name);
+        const heartClass = isFavorite ? 'fa-heart active' : 'fa-heart';
+
         resultItem.innerHTML = `
             <div class="place-name">${place.place_name}</div>
             <div class="place-address">${place.address_name}</div>
             <button onclick="selectLocation(${place.y}, ${place.x}, '${inputType}', '${place.place_name}')">
                 ${inputType === 'start' ? '출발지로 선택하기' : '도착지로 선택하기'}
             </button>
+            <i class="fa-solid ${heartClass}" onclick="toggleFavorite(this, ${index})"></i>
+            <button style="position: absolute; top: 0; right: 0;" onclick="infowindow.close()">x</button>
         `;
         container.appendChild(resultItem);
+
+        // Add marker for each search result
+        const marker = new kakao.maps.Marker({
+            map: map,
+            position: new kakao.maps.LatLng(place.y, place.x)
+        });
+
+        kakao.maps.event.addListener(marker, 'click', function () {
+            const content = `
+                <div style="padding:5px;font-size:12px;position:relative;height:75px;">
+                    <div>${place.place_name}</div>
+                    <button onclick="selectLocation(${place.y}, ${place.x}, '${inputType}', '${place.place_name}')">
+                        ${inputType === 'start' ? '출발지로 선택하기' : '도착지로 선택하기'}
+                    </button>
+                    <i class="fa-solid ${heartClass}" onclick="toggleFavorite(this, ${index})"></i>
+                    <button style="position: absolute; top: 0; right: 0;" onclick="infowindow.close()">x</button>
+                </div>`;
+            infowindow.setContent(content);
+            infowindow.open(map, marker);
+        });
+
+        markers.push(marker);
+        bounds.extend(new kakao.maps.LatLng(place.y, place.x));
     });
+
+    map.setBounds(bounds);
 };
+
 
 document.getElementById('start-mic-start').addEventListener('click', () => startRecord('search-start'));
 document.getElementById('start-mic-end').addEventListener('click', () => startRecord('search-end'));
@@ -516,6 +549,83 @@ const startRecord = (inputId) => {
   } else {
     alert('음성 인식 API를 지원하지 않는 브라우저입니다.');
   }
+};
+
+const toggleSearch = () => {
+    const searchBar = document.getElementById('search-bar');
+    searchBar.style.display = (searchBar.style.display === 'none' || searchBar.style.display === '') ? 'inline-block' : 'none';
+};
+
+function toggleFavorite(icon) {
+    const placeName = icon.parentElement.querySelector('.place-name').textContent;
+
+    // Toggle the heart icon color
+    if (icon.classList.contains('liked')) {
+        icon.classList.remove('liked');
+        icon.style.color = ''; // Remove red color
+        // Remove from favorites
+        favorites = favorites.filter(favorite => favorite !== placeName);
+    } else {
+        icon.classList.add('liked');
+        icon.style.color = 'red'; // Set heart color to red
+        // Add to favorites
+        favorites.push(placeName);
+    }
+
+    // Update the favorites list
+    updateFavoritesList();
+}
+function updateFavoritesList() {
+    const favoritesList = document.getElementById('favorites-list');
+    favoritesList.innerHTML = ''; // Clear existing favorites
+
+    favorites.forEach(place => {
+        const listItem = document.createElement('div');
+        listItem.textContent = place;
+        favoritesList.appendChild(listItem);
+    });
+}
+
+const displayFavorites = () => {
+    const favoritesList = document.getElementById('favoritesList');
+    removeAllChildNodes(favoritesList);
+
+    favorites.forEach((favorite, index) => {
+        const li = document.createElement('li');
+        li.className = 'item';
+
+        let itemStr = `<span class="markerbg marker_${index + 1}"></span>
+            <div class="favorite-info">
+                <h5>${favorite.name}<i class="fa-solid fa-heart favorite-icon active" onclick="removeFavorite(${index})"></i></h5>`;
+
+        if (favorite.road_address_name) {
+            itemStr += `<div><span>${favorite.road_address_name}</span></div>
+                <div><span class="jibun gray">${favorite.address_name}</span></div>`;
+        } else {
+            itemStr += `<div><span>${favorite.address_name}</span></div>`;
+        }
+
+        itemStr += `<div><span class="tel">${favorite.phone}</span></div>
+            </div>`;
+
+        li.innerHTML = itemStr;
+
+        li.addEventListener('mouseover', () => {
+            infowindow.setContent(`<div style="padding:5px;font-size:13px;font-family:Arial, Helvetica, sans-serif;">${favorite.name}</div>`);
+            infowindow.open(map, new kakao.maps.LatLng(favorite.lat, favorite.lng));
+        });
+
+        li.addEventListener('mouseout', () => {
+            infowindow.close();
+        });
+
+        favoritesList.appendChild(li);
+    });
+};
+
+const removeFavorite = (index) => {
+    favorites.splice(index, 1);
+    displayFavorites();
 };
 
 document.getElementById('start-mic-start').addEventListener('click', () => startRecord('search-start'));
