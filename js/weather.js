@@ -8,9 +8,9 @@ const displayWeather = (data, elementId) => {
   const city = data.name;
 
   weatherLocation.innerHTML = `
-    <p>도시 : ${city}</p>
-    <p>날씨 : ${weatherDescription}</p>
-    <p>온도 : ${temperature}℃</p>
+    <div class="weather-item city">${city}</div>
+    <div class="weather-item description">${weatherDescription}</div>
+    <div class="weather-item temperature">${temperature}℃</div>
   `;
 };
 
