@@ -9,30 +9,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <section class="mainContainer">
-        <div class="row mainInner">
-            <div class="col-lg-2">
+    <div id="map"></div>
+    <section class="layout-container">
+        <div class="mainContainer">
                 <!-- <span class="openNav" onclick="handleSearch()">&#9776;</span> -->
                 <nav>
                   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-search-tab" data-bs-toggle="tab" data-bs-target="#nav-search" type="button" role="tab" aria-controls="nav-search" aria-selected="true"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <button class="nav-link" id="nav-route-tab" data-bs-toggle="tab" data-bs-target="#nav-route" type="button" role="tab" aria-controls="nav-route" aria-selected="false"><i class="fa-solid fa-route"></i></button>
+                    <button class="nav-link active" id="nav-route-tab" data-bs-toggle="tab" data-bs-target="#nav-route" type="button" role="tab" aria-controls="nav-route" aria-selected="false"><i class="fa-solid fa-route"></i></button>
                     <button class="nav-link" id="nav-weather-tab" data-bs-toggle="tab" data-bs-target="#nav-weather" type="button" role="tab" aria-controls="nav-weather" aria-selected="false"><i class="fa-solid fa-cloud"></i></button>
                     <button class="nav-link" id="nav-liked-tab" data-bs-toggle="tab" data-bs-target="#nav-liked" type="button" role="tab" aria-controls="nav-liked" aria-selected="false"><i class="fa-solid fa-heart"></i></button>
                     <button class="nav-link"  onclick="openNav()" id="nav-contact-tab" type="button" aria-selected="false"><i class="fa-solid fa-gear"></i></button>
                   </div>
                 </nav>
                 <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-search" role="tabpanel" aria-labelledby="nav-search-tab" tabindex="0">
-                        <div class="search-container">
-                            <span class="search-icon" onclick="toggleSearch()">🔍</span>
-                            <input type="text" id="search-bar" placeholder="장소 검색..." onkeypress="handleSearch(event)" />
-                            <button id="search-button">검색</button>
-                        </div>
-                        <ul id="placesList"></ul>
-                        <div id="pagination"></div>
-                    </div>
-                    <div class="tab-pane fade" id="nav-route" role="tabpanel" aria-labelledby="nav-route-tab" tabindex="0">
+
+                    <div class="tab-pane fade show active" id="nav-route" role="tabpanel" aria-labelledby="nav-route-tab" tabindex="0">
                         <div class="buttons">
                       <div id="clickLatlng"></div>
                       <div class="search-container">
@@ -76,9 +67,7 @@
                 </div>
                   <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">...</div>
                 </div>
-
-            </div>
-            <div class="col-lg-10" id="map">
+                </div>
               <div id="category-container">
                 <div id="category-wrapper">
                   <ul id="category">
@@ -172,6 +161,7 @@
 
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a51329e89074f6994e355ba3a1df099c&libraries=services"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  
   <script src="https://kit.fontawesome.com/b4957b2c73.js" crossorigin="anonymous"></script>
   <script src="js/config.js"></script>
   <script src="js/weather.js"></script>
