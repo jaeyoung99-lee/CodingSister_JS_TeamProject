@@ -5,12 +5,18 @@ let endMarker = null;
 let origin = '';
 let destination = '';
 let markers = [];
+let clickMarkers = [];
 let startName = '';
 let endName = '';
 let bounds = new kakao.maps.LatLngBounds();
 const ps = new kakao.maps.services.Places();
 const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 const geocoder = new kakao.maps.services.Geocoder();
+let currentPolyline = null;
+const startInfo = document.getElementById('start-info');
+const endInfo = document.getElementById('end-info');
+const micButton = document.getElementById('start-mic');
+const searchStart = document.getElementById('search-start');
 
 const initMap = () => {
   if (map) return;
@@ -41,6 +47,33 @@ const initMap = () => {
 
     map.setCenter(new kakao.maps.LatLng(lat, lng));
   }
+
+  kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+    const latlng = mouseEvent.latLng;
+
+    clearClickMarkers();
+
+    marker = new kakao.maps.Marker({ position: latlng });
+    marker.setMap(map);
+    clickMarkers.push(marker);
+
+    const infowindowContent = `
+    <div style="padding:5px;font-size:12px; position: relative; height: 95px;">
+      <div>위치 선택하기</div>
+      <button onclick="selectLocation(${latlng.getLat()}, ${latlng.getLng()}, 'start', '${latlng.getLat()}, ${latlng.getLng()}')">출발지로 선택하기</button>
+      <button onclick="selectLocation(${latlng.getLat()}, ${latlng.getLng()}, 'end', '${latlng.getLat()}, ${latlng.getLng()}')">도착지로 선택하기</button>
+      <button style="position: absolute; top: 0; right: 0;" onclick="infowindow.close()">x</button>
+    </div>
+ `;
+    infowindow.setContent(infowindowContent);
+    infowindow.open(map, marker);
+})
+};
+
+const getCurrentPosition = () => {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
 };
 
 const handleSearch = () => {
@@ -64,6 +97,7 @@ const selectLocation = async (lat, lng, type, placeName) => {
     origin = `${lng},${lat}`;
     startName = placeName; // 장소 이름 저장
   } else if (type === 'end') {
+    clearClickMarkers();
     if (endMarker) {
       endMarker.setMap(null);
     }
@@ -99,6 +133,7 @@ const selectLocation = async (lat, lng, type, placeName) => {
         return;
       }
     }
+    removeClickMarker(lat,lng);
 
     if (origin && destination) {
       getCarDirection();
@@ -109,10 +144,23 @@ const selectLocation = async (lat, lng, type, placeName) => {
   infowindow.close();
 }
 
+const clearClickMarkers = () => {
+  clickMarkers.forEach(marker => marker.setMap(null));
+  clickMarkers = [];
+}
+
+const removeClickMarker = (lat, lng) => {
+  clickMarkers = clickMarkers.filter(marker => {
+      const markerPosition = marker.getPosition();
+      if (markerPosition.getLat() === lat && markerPosition.getLng() === lng) {
+          return false;
+      }
+      return true;
+  });
+}
+
 // 장소 이름을 업데이트하는 함수입니다
 const updateInfo = () => {
-  const startInfo = document.getElementById('start-info');
-  const endInfo = document.getElementById('end-info');
 
   // 출발지와 도착지의 장소 이름을 표시합니다
   document.querySelector('.location-info').style.display = 'block'
@@ -166,6 +214,53 @@ const placesSearchCallback = (data, status) => {
 const removeMarkers = () => {
   markers.forEach(marker => marker.setMap(null));
   markers = [];
+
+  clearClickMarkers();
+}
+
+const removeAll = () => {
+  removeMarkers();
+  
+  if (currentPolyline) {
+    currentPolyline.setMap(null);
+    currentPolyline = null;
+}
+
+  if (startMarker) {
+  startMarker.setMap(null);
+  startMarker = null;
+}
+
+  if (endMarker) {
+  endMarker.setMap(null);
+  endMarker = null;
+}
+
+if (startInfo) {
+    startInfo.textContent = '';
+}
+
+if (endInfo) {
+    endInfo.textContent = '';
+}
+
+origin = '';
+destination = '';
+startName = '';
+endName = '';
+searchStart.value = '';
+
+const clickLatlng = document.getElementById('clickLatlng');
+    
+if (clickLatlng) {
+    clickLatlng.innerHTML = '';
+}
+infowindow.close();
+
+const distanceDiv = document.getElementById("between-distance");
+if (distanceDiv) {
+    distanceDiv.innerHTML = '';
+}
 }
 
 const getCarDirection = async () => {
@@ -173,79 +268,106 @@ const getCarDirection = async () => {
   const url = 'https://apis-navi.kakaomobility.com/v1/directions';
 
   if (!origin || !destination) {
-    console.log('출발지 또는 목적지가 설정되지 않았습니다.');
-    return;
+      console.log('출발지 또는 목적지가 설정되지 않았습니다.');
+      return;
   }
 
   const queryParams = new URLSearchParams({
-    origin: origin,
-    destination: destination
+      origin: origin,
+      destination: destination
   });
 
   const requestUrl = `${url}?${queryParams.toString()}`;
-
-  const headers = {
-    Authorization: `KakaoAK ${REST_API_KEY}`
-  };
+  console.log(requestUrl);
 
   try {
-    const response = await fetch(requestUrl, {
-      method: 'GET',
-      headers: headers
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const mapInfo = data.routes[0].summary;
-    console.log("data:", data);
-    console.log("차량거리", mapInfo.distance);
-    console.log("차량(초)", mapInfo.duration);
-    console.log("TAXI", mapInfo.fare.taxi);
-
-    let mapDistance = mapInfo.distance;
-    const distanceValue = mapDistance;
-    mapDistance = mapDistance > 999 ? (Math.round(mapDistance * 0.001 * 100) / 100) + "km" : mapDistance + "m";
-
-    const mapWalkValue = Math.round(((distanceValue * 0.001) / 4) * 60);
-    const mapWalk = mapWalkValue > 59 ? `${Math.floor(mapWalkValue/60)}시간${mapWalkValue % 60}분`
-    : `${mapWalkValue}분`;
-
-    let mapCarTime = Math.round(mapInfo.duration / 60);
-    mapCarTime = mapCarTime > 59 ? `${Math.floor(mapCarTime/60)}시간${mapCarTime % 60}분`
-    : `${mapCarTime}분`;
-
-    const mapTaxiFareValue = mapInfo.fare.taxi;
-    const mapTaxiFare = new Intl.NumberFormat().format(mapTaxiFareValue);
-
-    const distanceDiv = document.getElementById("between-distance");
-    distanceDiv.innerHTML += `<div><i class="fa-solid fa-car"></i> ${mapDistance} ${mapCarTime} ${mapTaxiFare}원</div>`
-    distanceDiv.innerHTML += `<div><i class="fa-solid fa-person-walking"></i>${mapWalk}</div>`
-    // distanceDiv.innerHTML = `${mapDistance} ${mapCarTime} ${mapTaxiFare}원 ${mapWalk}`;
-
-    const linePath = [];
-    data.routes[0].sections[0].roads.forEach(router => {
-      router.vertexes.forEach((vertex, index) => {
-        if (index % 2 === 0) {
-          linePath.push(new kakao.maps.LatLng(router.vertexes[index + 1], router.vertexes[index]));
-        }
+      const response = await fetch(requestUrl, {
+          method: 'GET',
+          headers: {
+              Authorization: `KakaoAK ${REST_API_KEY}`
+          }
       });
-    });
 
-    const polyline = new kakao.maps.Polyline({
+      if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+
+          if (data.routes && data.routes.length > 0) {
+              const route = data.routes[0];
+              drawRoute(route);
+
+              const mapInfo = route.summary;
+              console.log("차량거리", mapInfo.distance);
+              console.log("차량(초)", mapInfo.duration);
+              console.log("TAXI", mapInfo.fare.taxi);
+
+              let mapDistance = mapInfo.distance;
+              const distanceValue = mapDistance;
+              mapDistance = mapDistance > 999 ? (Math.round(mapDistance * 0.001 * 100) / 100) + "km" : mapDistance + "m";
+
+              const mapWalkValue = Math.round(((distanceValue * 0.001) / 4) * 60);
+              const mapWalk = mapWalkValue > 59 ? `${Math.floor(mapWalkValue/60)}시간${mapWalkValue % 60}분`
+                  : `${mapWalkValue}분`;
+
+              let mapCarTime = Math.round(mapInfo.duration / 60);
+              mapCarTime = mapCarTime > 59 ? `${Math.floor(mapCarTime/60)}시간${mapCarTime % 60}분`
+                  : `${mapCarTime}분`;
+
+              const mapTaxiFareValue = mapInfo.fare.taxi;
+              const mapTaxiFare = new Intl.NumberFormat().format(mapTaxiFareValue);
+
+              const distanceDiv = document.getElementById("between-distance");
+              distanceDiv.innerHTML = '';
+              distanceDiv.innerHTML += `<div><i class="fa-solid fa-car"></i> ${mapDistance} ${mapCarTime} ${mapTaxiFare}원</div>`
+              distanceDiv.innerHTML += `<div><i class="fa-solid fa-person-walking"></i>${mapWalk}</div>`;
+          } else {
+              console.error('경로 데이터를 찾을 수 없습니다.');
+          }
+      } else {
+          console.error('API 요청이 실패했습니다.', response.status, response.statusText);
+      }
+  } catch (error) {
+      console.error('API 요청 중 오류가 발생했습니다.', error);
+  }
+}
+
+const drawRoute = (route) => {
+  if (!route || !route.sections) {
+      console.error('경로 데이터가 올바르지 않습니다.');
+      return;
+  }
+
+  const linePath = [];
+  const sections = route.sections;
+
+  sections.forEach(section => {
+      const roads = section.roads;
+      if (roads) {
+          roads.forEach(road => {
+              const vertexes = road.vertexes;
+              if (vertexes) {
+                  for (let i = 0; i < vertexes.length; i += 2) {
+                      linePath.push(new kakao.maps.LatLng(vertexes[i + 1], vertexes[i]));
+                  }
+              }
+          });
+      }
+  });
+
+  if (currentPolyline) {
+      currentPolyline.setMap(null);
+  }
+
+  currentPolyline = new kakao.maps.Polyline({
+      map: map,
       path: linePath,
       strokeWeight: 5,
-      strokeColor: '#000000',
-      strokeOpacity: 0.7,
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
       strokeStyle: 'solid'
-    });
+  });
 
-    polyline.setMap(map);
-  } catch (error) {
-    console.error('Error:', error);
-  }
+  currentPolyline.setMap(map);
 };
 
 // sideNav, overLay
@@ -308,9 +430,6 @@ dropdown.addEventListener("click", () => {
     drop_icon2.style.display = "inline-flex";
   }
 });
-
-const micButton = document.getElementById('start-mic');
-const searchStart = document.getElementById('search-start');
 
 const startRecord = () => {
   if ('webkitSpeechRecognition' in window) {
