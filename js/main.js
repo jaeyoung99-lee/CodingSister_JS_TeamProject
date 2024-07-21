@@ -6,6 +6,7 @@ let origin = '';
 let destination = '';
 let markers = [];
 let clickMarkers = [];
+let favorites = [];
 let startName = '';
 let endName = '';
 let bounds = new kakao.maps.LatLngBounds();
@@ -17,7 +18,6 @@ const startInfo = document.getElementById('start-info');
 const endInfo = document.getElementById('end-info');
 const searchStart = document.getElementById('search-start');
 const searchEnd = document.getElementById('search-end')
-
 
 const initMap = () => {
   if (map) return;
@@ -78,11 +78,11 @@ const getCurrentPosition = () => {
 };
 
 const handleSearch = () => {
-  searchPlaces('search-start', placesSearchCallback);
+  searchPlaces('search-start', placesSearchCallback, 'start');
 }
 
 const searchHandle = () => {
-  searchPlaces('search-end', placesSearchCallback);
+  searchPlaces('search-end', placesSearchCallback, 'end');
 }
 
 /// 출발지 또는 도착지 선택
@@ -106,8 +106,8 @@ const selectLocation = async (lat, lng, type, placeName) => {
       if (origin && destination) {
           getCarDirection();
       }
-  } else if (type === 'end') {
-      clearClickMarkers();
+      } else if (type === 'end') {
+        clearClickMarkers();
 
       if (endMarker) {
           endMarker.setMap(null);
@@ -181,47 +181,85 @@ const updateInfo = () => {
 };
 
 // 장소 검색 함수
-const searchPlaces = (inputId, callback) => {
+const searchPlaces = (inputId, callback, inputType) => {
   const keyword = document.getElementById(inputId).value.trim();
 
   if (!keyword) {
     return false;
   }
 
-  ps.keywordSearch(keyword, callback);
+  ps.keywordSearch(keyword, (data, status) => {
+    callback(data, status, inputType);
+  });
+};
+// 장소 검색 콜백 함수
+const placesSearchCallback = (data, status, inputType) => {
+    if (status === kakao.maps.services.Status.OK) {
+        removeMarkers();
+        bounds = new kakao.maps.LatLngBounds();
+  
+        console.log('Search Results:', data); // Log the search results
+
+        displaySearchResults(data, inputType);
+  
+        data.forEach(place => {
+            const marker = new kakao.maps.Marker({
+                map: map,
+                position: new kakao.maps.LatLng(place.y, place.x)
+            });
+  
+            kakao.maps.event.addListener(marker, 'click', function () {
+                const content = `
+                    <div style="padding:5px;font-size:12px;position:relative;height:75px;">
+                        <div>${place.place_name}</div>
+                        <button onclick="selectLocation(${place.y}, ${place.x}, '${inputType}', '${place.place_name}')">
+                            ${inputType === 'start' ? '출발지로 선택하기' : '도착지로 선택하기'}
+                        </button>
+                        <button style="position: absolute; top: 0; right: 0;" onclick="infowindow.close()">x</button>
+                    </div>`;
+                infowindow.setContent(content);
+                infowindow.open(map, marker);
+            });
+  
+            markers.push(marker);
+            bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+        });
+  
+        map.setBounds(bounds);
+    } else {
+        console.error("장소 검색 중 오류가 발생했습니다:", status);
+    }
 };
 
-// 장소 검색 콜백 함수
-const placesSearchCallback = (data, status) => {
-  if (status === kakao.maps.services.Status.OK) {
-    removeMarkers();
-    bounds = new kakao.maps.LatLngBounds();
+const displaySearchResults = (data, inputType) => {
+    const container = document.getElementById('search-results-container');
+    if (!container) {
+        console.error("search-results-container element not found.");
+        return;
+    }
+
+    container.innerHTML = ''; // Clear previous results
+    console.log('Displaying search results'); // Log for debugging
 
     data.forEach(place => {
-      const marker = new kakao.maps.Marker({
-        map: map,
-        position: new kakao.maps.LatLng(place.y, place.x)
-      });
-
-      kakao.maps.event.addListener(marker, 'click', function () {
-        const content = `<div style="padding:5px;font-size:12px;">${place.place_name}<br>
-          <button onclick="selectLocation(${place.y}, ${place.x}, 'start', '${place.place_name}')">출발지로 선택하기</button>
-          <button onclick="selectLocation(${place.y}, ${place.x}, 'end', '${place.place_name}')">도착지로 선택하기</button>
-        </div>`;
-        infowindow.setContent(content);
-        infowindow.open(map, marker);
-      });
-
-      markers.push(marker);
-      bounds.extend(new kakao.maps.LatLng(place.y, place.x));
+        const resultItem = document.createElement('div');
+        resultItem.className = 'search-result-item';
+        resultItem.innerHTML = `
+            <div class="place-name">${place.place_name}</div>
+            <div class="place-address">${place.address_name}</div>
+            <button onclick="selectLocation(${place.y}, ${place.x}, '${inputType}', '${place.place_name}')">
+                ${inputType === 'start' ? '출발지로 선택하기' : '도착지로 선택하기'}
+            </button>
+        `;
+        container.appendChild(resultItem);
     });
-
-    map.setBounds(bounds);
-  } else {
-    // 에러 처리
-    console.error("장소 검색 중 오류가 발생했습니다:", status);
-  }
 };
+
+document.getElementById('start-mic-start').addEventListener('click', () => startRecord('search-start'));
+document.getElementById('start-mic-end').addEventListener('click', () => startRecord('search-end'));
+
+window.onload = initMap;
+
 
 const removeMarkers = () => {
   markers.forEach(marker => marker.setMap(null));
@@ -484,290 +522,4 @@ document.getElementById('start-mic-start').addEventListener('click', () => start
 document.getElementById('start-mic-end').addEventListener('click', () => startRecord('search-end'));
 
 window.onload = initMap;
-const container = document.getElementById('map');
-const options = {
-    center: new kakao.maps.LatLng(33.450701, 126.570667),
-    level: 3
-};
-
-const zoomControl = new kakao.maps.ZoomControl();
-map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-let infowindowOpen = false;
-let favorites = [];
-
-const placesSearchCB = (data, status, pagination) => {
-    if (status === kakao.maps.services.Status.OK) {
-        const bounds = new kakao.maps.LatLngBounds();
-
-        removeMarker();
-        removeAllChildNodes(document.getElementById('placesList'));
-
-        data.forEach((place) => {
-            displayMarker(place);
-            bounds.extend(new kakao.maps.LatLng(place.y, place.x));
-        });
-
-        displayPagination(pagination);
-        displayPlaces(data);
-
-    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-        alert('검색 결과가 존재하지 않습니다.');
-    } else if (status === kakao.maps.services.Status.ERROR) {
-        alert('검색 결과 중 오류가 발생했습니다.');
-    }
-};
-
-const displayMarker = (place) => {
-    const marker = new kakao.maps.Marker({
-        map,
-        position: new kakao.maps.LatLng(place.y, place.x)
-    });
-
-    marker.place_name = place.place_name;
-    marker.road_address_name = place.road_address_name;
-    marker.address_name = place.address_name;
-    marker.phone = place.phone;
-
-    kakao.maps.event.addListener(marker, 'mouseover', () => {
-        if (!infowindowOpen) {
-            const content = `<div style="padding:5px;font-size:15px;font-family:Arial, Helvetica, sans-serif;">${place.place_name}</div>`;
-            infowindow.setContent(content);
-            infowindow.open(map, marker);
-        }
-    });
-
-    kakao.maps.event.addListener(marker, 'mouseout', () => {
-        if (!infowindowOpen) {
-            infowindow.close();
-        }
-    });
-
-    kakao.maps.event.addListener(marker, 'click', () => {
-        const infowindowContent = `<div style="padding:5px;font-size:15px;font-family:Arial, Helvetica, sans-serif;">${place.place_name}</div>`;
-        infowindow.setContent(infowindowContent);
-        infowindow.open(map, marker);
-        infowindowOpen = true;
-
-        kakao.maps.event.addListener(map, 'click', (mouseEvent) => {
-            if (!marker.getPosition().equals(mouseEvent.latLng)) {
-                infowindow.close();
-                infowindowOpen = false;
-            }
-        });
-    });
-
-    markers.push(marker);
-};
-
-const removeMarker = () => {
-    markers.forEach((marker) => {
-        marker.setMap(null);
-    });
-    markers = [];
-};
-
-const displayPagination = (pagination) => {
-    const paginationEl = document.getElementById('pagination');
-    const fragment = document.createDocumentFragment();
-
-    removeAllChildNodes(paginationEl);
-
-    for (let i = 1; i <= pagination.last; i++) {
-        const el = document.createElement('a');
-        el.href = "#";
-        el.innerHTML = i;
-
-        if (i === pagination.current) {
-            el.className = 'on';
-        } else {
-            el.onclick = (() => {
-                return () => {
-                    pagination.gotoPage(i);
-                    scrollToTop();
-                }
-            })(i);
-        }
-
-        fragment.appendChild(el);
-    }
-    paginationEl.appendChild(fragment);
-};
-
-const scrollToTop = () => {
-    const menuWrap = document.getElementById('menu_wrap');
-    if (menuWrap) {
-        menuWrap.scrollTop = 0;
-    } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-};
-
-const displayPlaces = (places) => {
-    const listEl = document.getElementById('placesList');
-    const fragment = document.createDocumentFragment();
-
-    places.forEach((place, index) => {
-        const itemEl = getListItem(index, place);
-        fragment.appendChild(itemEl);
-    });
-
-    listEl.appendChild(fragment);
-};
-
-const getListItem = (index, place) => {
-    const el = document.createElement('li');
-    el.className = 'item';
-
-    let itemStr = `<span class="markerbg marker_${index + 1}"></span>
-        <div class="info">
-            <h5>${place.place_name}</h5>`;
-
-    if (place.road_address_name) {
-        itemStr += `<div><span>${place.road_address_name}</span></div>
-            <div><span class="jibun gray">${place.address_name}</span></div>`;
-    } else {
-        itemStr += `<div><span>${place.address_name}</span></div>`;
-    }
-
-    itemStr += `<div><span class="tel">${place.phone}</span></div>
-        <i class="fa-solid fa-heart favorite-icon" onclick="toggleFavorite(this, ${index})"></i>
-        </div>`;
-
-    el.innerHTML = itemStr;
-
-    el.addEventListener('mouseover', () => {
-        infowindow.setContent(`<div style="padding:5px;font-size:13px;font-family:Arial, Helvetica, sans-serif;">${place.place_name}</div>`);
-        infowindow.open(map, markers[index]);
-    });
-
-    el.addEventListener('mouseout', () => {
-        infowindow.close();
-    });
-
-    return el;
-};
-
-const removeAllChildNodes = (el) => {
-    while (el.hasChildNodes()) {
-        el.removeChild(el.lastChild);
-    }
-};
-
-const toggleSearch = () => {
-    const searchBar = document.getElementById('search-bar');
-    searchBar.style.display = (searchBar.style.display === 'none' || searchBar.style.display === '') ? 'inline-block' : 'none';
-};
-
-const toggleFavorite = (element, index) => {
-    element.classList.toggle('active');
-
-    const place = markers[index].getPosition();
-    const favoriteItem = {
-        name: markers[index].place_name,
-        lat: place.getLat(),
-        lng: place.getLng(),
-        road_address_name: markers[index].road_address_name,
-        address_name: markers[index].address_name,
-        phone: markers[index].phone
-    };
-
-    if (element.classList.contains('active')) {
-        favorites.push(favoriteItem);
-    } else {
-        favorites = favorites.filter(fav => fav.name !== favoriteItem.name);
-    }
-
-    displayFavorites();
-}
-
-const displayFavorites = () => {
-    const favoritesList = document.getElementById('favoritesList');
-    removeAllChildNodes(favoritesList);
-
-    favorites.forEach((favorite, index) => {
-        const li = document.createElement('li');
-        li.className = 'item';
-
-        let itemStr = `<span class="markerbg marker_${index + 1}"></span>
-            <div class="favorite-info">
-                <h5>${favorite.name}<i class="fa-solid fa-heart favorite-icon active" onclick="removeFavorite(${index})"></i></h5>`;
-
-        if (favorite.road_address_name) {
-            itemStr += `<div><span>${favorite.road_address_name}</span></div>
-                <div><span class="jibun gray">${favorite.address_name}</span></div>`;
-        } else {
-            itemStr += `<div><span>${favorite.address_name}</span></div>`;
-        }
-
-        itemStr += `<div><span class="tel">${favorite.phone}</span></div>
-            </div>`;
-
-        li.innerHTML = itemStr;
-
-        li.addEventListener('mouseover', () => {
-            infowindow.setContent(`<div style="padding:5px;font-size:13px;font-family:Arial, Helvetica, sans-serif;">${favorite.name}</div>`);
-            infowindow.open(map, new kakao.maps.LatLng(favorite.lat, favorite.lng));
-        });
-
-        li.addEventListener('mouseout', () => {
-            infowindow.close();
-        });
-
-        favoritesList.appendChild(li);
-    });
-};
-
-const removeFavorite = (index) => {
-    favorites.splice(index, 1);
-    displayFavorites();
-};
-
-document.getElementById('search-button').addEventListener('click', searchPlaces);
-kakao.maps.event.addListener(map, 'zoom_changed', searchPlaces);
-
-document.querySelector('.search-tab').addEventListener('click', () => {
-    document.getElementById('search-bar').focus();
-});
-
-document.querySelector('.liked-tab').addEventListener('click', () => {
-    document.getElementById('favorites').scrollIntoView({ behavior: 'smooth' });
-});
-
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-      document.querySelector('.tab.active').classList.remove('active');
-      tab.classList.add('active');
-
-      const isSearchTab = tab.classList.contains('search-tab');
-
-      // Show/hide relevant elements and disable/enable functionalities based on the active tab
-      document.querySelector('.search-container').style.display = isSearchTab ? 'block' : 'none';
-      document.getElementById('placesList').style.display = isSearchTab ? 'block' : 'none';
-      document.getElementById('pagination').style.display = isSearchTab ? 'block' : 'none';
-      document.getElementById('favorites').style.display = isSearchTab ? 'none' : 'block';
-
-      // Enable/disable functionalities based on active tab
-      if (isSearchTab) {
-          // Enable search tab functionalities
-          document.getElementById('search-start').disabled = false;
-          document.getElementById('search-end').disabled = false;
-          document.getElementById('search-button').disabled = false;
-
-          // Disable route tab functionalities
-          document.getElementById('search-start').disabled = true;
-          document.getElementById('search-end').disabled = true;
-          document.getElementById('start-mic-start').disabled = true;
-          document.getElementById('start-mic-end').disabled = true;
-      } else {
-          // Enable route tab functionalities
-          document.getElementById('search-start').disabled = true;
-          document.getElementById('search-end').disabled = true;
-          document.getElementById('search-button').disabled = true;
-
-          // Disable search tab functionalities
-          document.getElementById('start-mic-start').disabled = false;
-          document.getElementById('start-mic-end').disabled = false;
-      }
-  });
-});
 
