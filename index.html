@@ -25,10 +25,17 @@
                     <div class="buttons">
                       <div id="clickLatlng"></div>
                       <div class="search-container">
-                        <span class="search-icon" onclick="handleSearch()">🔍</span>
-                        <input type="text" id="search-start" placeholder="출발지..." onkeypress="handleSearch('start')">
+                        <div>
+                          <span class="search-icon" onclick="handleSearch()">🔍</span>
+                          <input type="text" id="search-start" placeholder="출발지..." onkeypress="handleSearch('start')">
+                          <button type="button" id="start-mic-start">🎤 음성 입력</button>
+                        </div>
+                        <div>
+                          <span class="search-icon" onclick="handleSearch()">🔍</span>
+                          <input type="text" id="search-end" placeholder="도착지..." onkeypress="handleSearch('end')">
+                          <button type="button" id="start-mic-end">🎤 음성 입력</button>
+                        </div>
                           <button id="delete-button" onclick="removeAll()"><i class="fa-solid fa-trash-can"></i></button>
-                          <button type="button" id="start-mic">🎤 음성 입력</button>
                       </div>
                       <div class="location-info">
                         <div id="start-info">출발지 :</div>

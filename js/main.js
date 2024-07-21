@@ -15,8 +15,9 @@ const geocoder = new kakao.maps.services.Geocoder();
 let currentPolyline = null;
 const startInfo = document.getElementById('start-info');
 const endInfo = document.getElementById('end-info');
-const micButton = document.getElementById('start-mic');
 const searchStart = document.getElementById('search-start');
+const searchEnd = document.getElementById('search-end')
+
 
 const initMap = () => {
   if (map) return;
@@ -249,6 +250,7 @@ destination = '';
 startName = '';
 endName = '';
 searchStart.value = '';
+searchEnd.value = '';
 
 const clickLatlng = document.getElementById('clickLatlng');
     
@@ -431,7 +433,7 @@ dropdown.addEventListener("click", () => {
   }
 });
 
-const startRecord = () => {
+const startRecord = (inputId) => {
   if ('webkitSpeechRecognition' in window) {
     const keywordRecord = new webkitSpeechRecognition();
     keywordRecord.lang = 'ko-KR'; // 한국어 설정
@@ -442,11 +444,15 @@ const startRecord = () => {
 
     keywordRecord.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-      searchStart.value = transcript;
+      document.getElementById(inputId).value = transcript;
       console.log('음성 인식 결과:', transcript);
 
       // 음성 인식 결과로 장소 검색 수행
-      handleSearch();
+      if (inputId === 'search-start') {
+        handleSearch();
+      } else if (inputId === 'search-end') {
+        searchHandle();
+      }
     };
 
     keywordRecord.onerror = (event) => {
@@ -463,6 +469,7 @@ const startRecord = () => {
   }
 };
 
-micButton.addEventListener('click', startRecord);
+document.getElementById('start-mic-start').addEventListener('click', () => startRecord('search-start'));
+document.getElementById('start-mic-end').addEventListener('click', () => startRecord('search-end'));
 
 window.onload = initMap;
