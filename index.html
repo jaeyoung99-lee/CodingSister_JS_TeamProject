@@ -28,12 +28,12 @@
                       <div class="search-container">
                         <button id="delete-button" onclick="removeAll()"><i class="fa-solid fa-trash-can"></i></button>
                           <div>
-                            <input class="search-box" type="text" id="search-start" placeholder="출발지..." onkeypress="handleSearch('start')">
+                            <input class="search-box search" type="text" id="search-start" placeholder="출발지..." onkeypress="handleSearch('start')">
                             <span class="search-icon" onclick="handleSearch()">🔍</span>
                             <button type="button" id="start-mic-start" class="mic-button"><i class="fa-solid fa-microphone"></i></button>
                           </div>
                           <div>
-                            <input class="search-box" type="text" id="search-end" placeholder="도착지..." onkeypress="searchHandle('end')">
+                            <input class="search-box search" type="text" id="search-end" placeholder="도착지..." onkeypress="searchHandle('end')">
                             <span class="search-icon" onclick="searchHandle()">🔍</span>
                             <button type="button" id="start-mic-end" class="mic-button"><i class="fa-solid fa-microphone"></i></button>
                           </div>
@@ -65,7 +65,7 @@
             <div class="col-lg-10" id="map">
               <div id="category-container">
                 <div id="category-wrapper">
-                  <ul id="category">
+                  <ul id="category" class="category">
                     <li id="BK9" data-order="0">
                       <span class="category_bg"
                         ><i class="fas fa-university"></i
