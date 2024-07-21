@@ -61,13 +61,18 @@ h1 {
   background-color: wheat;
 }
 
-#weather {
+#weather, #weatherBox {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   margin-top: 100px;
+}
+
+#weather{
+  position: relative;
+  top: 20rem;
 }
 
 .nav-link{
