@@ -384,12 +384,13 @@ p {
   margin-top: 5px;
 }
 
-.favorite-icon {
+/* Style for the heart icon */
+.heart-icon {
   cursor: pointer;
-  color: gray; /* Default color */
-  margin-left: 10px; /* Adjust as needed */
+  font-size: 20px;
+  margin-left: 10px;
 }
 
-.favorite-icon.favorited {
-  color: red; /* Favorited color */
+.heart-icon.liked {
+  color: red;
 }
