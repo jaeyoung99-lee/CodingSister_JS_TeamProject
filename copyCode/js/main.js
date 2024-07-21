@@ -47,8 +47,8 @@ const initMap = () => {
         const infowindowContent = `
         <div style="padding:5px;font-size:12px; position: relative; height: 95px;">
           <div>${latlng.getLat()},</div> <div>${latlng.getLng()}</div>
-          <button onclick="selectLocation(${latlng.getLat()}, ${latlng.getLng()}, 'start', '${latlng.getLat()}, ${latlng.getLng()}')">출발지로 선택하기</button>
-          <button onclick="selectLocation(${latlng.getLat()}, ${latlng.getLng()}, 'end', '${latlng.getLat()}, ${latlng.getLng()}')">도착지로 선택하기</button>
+          <button onclick="selectLocation(${latlng.getLat()}, ${latlng.getLng()}, 'start', '클릭한 위치')">출발지로 선택하기</button>
+          <button onclick="selectLocation(${latlng.getLat()}, ${latlng.getLng()}, 'end', '클릭한 위치')">도착지로 선택하기</button>
           <button style="position: absolute; top: 0; right: 0;" onclick="infowindow.close()">x</button>
         </div>
      `;
