@@ -65,7 +65,7 @@ h1 {
   background-color: wheat;
 }
 
-#weather {
+#weather, #weatherBox {
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   max-width: 400px;
@@ -105,6 +105,11 @@ h1 {
 
 .temperature {
   background-color: #ff5722;
+}
+
+#weather{
+  position: relative;
+  top: 20rem;
 }
 
 .nav-link {
