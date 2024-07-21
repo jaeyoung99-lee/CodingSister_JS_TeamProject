@@ -456,6 +456,22 @@ p {
     font-size: 20px;
   }
 
+  #weather{
+    height: 100px;
+    width: 150px;
+    position: absolute;
+    top: 45px;
+    right: 0px;
+  }
+
+  .weather-item {
+    font-size: 15px;
+    text-align: center;
+    border-radius: 8px;
+    color: black;
+    margin: 0px;
+  }
+
   #category {
     display: flex;
     flex-direction: column;
