@@ -3,14 +3,26 @@ const contentNode = document.createElement("div");
 const markerList = [];
 let currCategory = "";
 let pagination = null;
-const categoryCounts = { BK9: 0, MT1: 0, PM9: 0, OL7: 0, CE7: 0, CS2: 0 };
+const categoryCounts = { BK9: 0, MT1: 0, PM9: 0, OL7: 0, CE7: 0, CS2: 0, FD6: 0, HP8: 0, AT4: 0, AD5: 0 };
 let totalPlacesCount = 0;
 
 // 상수로 분리한 마커 이미지 설정
-const MARKER_IMAGE_SRC = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png';
 const MARKER_IMAGE_SIZE = new kakao.maps.Size(27, 28);
 const SPRITE_SIZE = new kakao.maps.Size(72, 208);
 const SPRITE_OFFSET = new kakao.maps.Point(11, 28);
+
+const ICONS = {
+  BK9: 'fa-university',
+  MT1: 'fa-shopping-cart',
+  PM9: 'fa-prescription-bottle',
+  OL7: 'fa-gas-pump',
+  CE7: 'fa-coffee',
+  CS2: 'fa-store',
+  FD6: 'fa-utensils',
+  HP8: 'fa-hospital',
+  AT4: 'fa-landmark',
+  AD5: 'fa-hotel'
+};
 
 // 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
 const addEventHandle = (target, type, callback) => {
@@ -43,6 +55,7 @@ const placesSearchCB = (data, status, _pagination) => {
     displayPlaces(data);
     updateCategoryCounts(data.length);
     totalPlacesCount += data.length;
+    console.log(`현재까지 검색된 총 장소의 수: ${totalPlacesCount}`);
 
     pagination = _pagination;
     if (pagination.hasNextPage) pagination.nextPage();
@@ -65,23 +78,30 @@ const displayPlaces = (places) => {
   const order = document.getElementById(currCategory).getAttribute('data-order');
   
   places.forEach(place => {
-    const marker = addMarker(new kakao.maps.LatLng(place.y, place.x), order);
-    kakao.maps.event.addListener(marker, "click", () => displayPlaceInfo(place));
+    const marker = addMarker(new kakao.maps.LatLng(place.y, place.x), order, place.category_group_code, place);
   });
 }
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
-const addMarker = (position, order) => {
-  const imgOptions = {
-    spriteSize: SPRITE_SIZE,
-    spriteOrigin: new kakao.maps.Point(46, order * 36),
-    offset: SPRITE_OFFSET
-  };
-  const markerImage = new kakao.maps.MarkerImage(MARKER_IMAGE_SRC, MARKER_IMAGE_SIZE, imgOptions);
-  const marker = new kakao.maps.Marker({ position, image: markerImage });
+
+const addMarker = (position, order, categoryCode, place) => {
+  const iconClass = ICONS[categoryCode] || 'fa-map-marker-alt';
+  const markerContent = document.createElement('div');
+  markerContent.className = 'marker';
+  markerContent.innerHTML = `<i class="fas ${iconClass}"></i>`;
+
+  const marker = new kakao.maps.CustomOverlay({
+    position: position,
+    content: markerContent,
+    yAnchor: 1
+  });
 
   marker.setMap(map);
   markerList.push(marker);
+
+  // 마커 클릭 이벤트 추가
+  markerContent.addEventListener('click', () => displayPlaceInfo(place, marker));
+
   return marker;
 }
 
