@@ -6,7 +6,6 @@ body{
 
 .weatherContainer {
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
   margin: 0;
   padding: 20px;
   display: flex;
@@ -20,6 +19,17 @@ h1 {
 
 #search-form {
   margin-bottom: 20px;
+  display: flex;
+}
+
+.mic-button{
+  border: none;
+  background-color: white;
+}
+
+#delete-button{
+  background-color: white;
+  border: none;
 }
 
 #search-form input {
@@ -33,14 +43,14 @@ h1 {
   padding: 10px 15px;
   font-size: 1em;
   border: none;
-  border-radius: 4px;
-  background-color: #007bff;
+  border-radius: 50%;
   color: white;
   cursor: pointer;
+  background-color: white;
 }
 
 #search-form button:hover {
-  background-color: #0056b3;
+  background-color: wheat;
 }
 
 #weather {

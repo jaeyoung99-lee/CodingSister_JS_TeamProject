@@ -18,7 +18,6 @@ const endInfo = document.getElementById('end-info');
 const searchStart = document.getElementById('search-start');
 const searchEnd = document.getElementById('search-end')
 
-
 const initMap = () => {
   if (map) return;
   
@@ -78,11 +77,11 @@ const getCurrentPosition = () => {
 };
 
 const handleSearch = () => {
-  searchPlaces('search-start', placesSearchCallback);
+  searchPlaces('search-start', placesSearchCallback, 'start');
 }
 
 const searchHandle = () => {
-  searchPlaces('search-end', placesSearchCallback);
+  searchPlaces('search-end', placesSearchCallback, 'end');
 }
 
 /// 출발지 또는 도착지 선택
@@ -106,8 +105,8 @@ const selectLocation = async (lat, lng, type, placeName) => {
       if (origin && destination) {
           getCarDirection();
       }
-  } else if (type === 'end') {
-      clearClickMarkers();
+      } else if (type === 'end') {
+        clearClickMarkers();
 
       if (endMarker) {
           endMarker.setMap(null);
@@ -181,18 +180,19 @@ const updateInfo = () => {
 };
 
 // 장소 검색 함수
-const searchPlaces = (inputId, callback) => {
+const searchPlaces = (inputId, callback, inputType) => {
   const keyword = document.getElementById(inputId).value.trim();
 
   if (!keyword) {
     return false;
   }
 
-  ps.keywordSearch(keyword, callback);
+  ps.keywordSearch(keyword, (data, status) => {
+    callback(data, status, inputType);
+  });
 };
-
 // 장소 검색 콜백 함수
-const placesSearchCallback = (data, status) => {
+const placesSearchCallback = (data, status, inputType) => {
   if (status === kakao.maps.services.Status.OK) {
     removeMarkers();
     bounds = new kakao.maps.LatLngBounds();
@@ -204,10 +204,14 @@ const placesSearchCallback = (data, status) => {
       });
 
       kakao.maps.event.addListener(marker, 'click', function () {
-        const content = `<div style="padding:5px;font-size:12px;">${place.place_name}<br>
-          <button onclick="selectLocation(${place.y}, ${place.x}, 'start', '${place.place_name}')">출발지로 선택하기</button>
-          <button onclick="selectLocation(${place.y}, ${place.x}, 'end', '${place.place_name}')">도착지로 선택하기</button>
-        </div>`;
+        const content = `
+          <div style="padding:5px;font-size:12px;position:relative;height:75px;">
+            <div>${place.place_name}</div>
+            <button onclick="selectLocation(${place.y}, ${place.x}, '${inputType}', '${place.place_name}')">
+              ${inputType === 'start' ? '출발지로 선택하기' : '도착지로 선택하기'}
+            </button>
+            <button style="position: absolute; top: 0; right: 0;" onclick="infowindow.close()">x</button>
+          </div>`;
         infowindow.setContent(content);
         infowindow.open(map, marker);
       });
@@ -218,7 +222,6 @@ const placesSearchCallback = (data, status) => {
 
     map.setBounds(bounds);
   } else {
-    // 에러 처리
     console.error("장소 검색 중 오류가 발생했습니다:", status);
   }
 };

@@ -26,16 +26,18 @@
                       <div id="clickLatlng"></div>
                       <div class="search-container">
                         <div>
-                          <span class="search-icon" onclick="handleSearch()">🔍</span>
-                          <input type="text" id="search-start" placeholder="출발지..." onkeypress="handleSearch('start')">
-                          <button type="button" id="start-mic-start">🎤 음성 입력</button>
-                        </div>
-                        <div>
-                          <span class="search-icon" onclick="searchHandle()">🔍</span>
-                          <input type="text" id="search-end" placeholder="도착지..." onkeypress="searchHandle('end')">
-                          <button type="button" id="start-mic-end">🎤 음성 입력</button>
-                        </div>
+                          <div>
+                            <input type="text" id="search-start" placeholder="출발지..." onkeypress="handleSearch('start')">
+                            <span class="search-icon" onclick="handleSearch()">🔍</span>
+                            <button type="button" id="start-mic-start" class="mic-button"><i class="fa-solid fa-microphone"></i></button>
+                          </div>
+                          <div>
+                            <input type="text" id="search-end" placeholder="도착지..." onkeypress="searchHandle('end')">
+                            <span class="search-icon" onclick="searchHandle()">🔍</span>
+                            <button type="button" id="start-mic-end" class="mic-button"><i class="fa-solid fa-microphone"></i></button>
+                          </div>
                           <button id="delete-button" onclick="removeAll()"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
                       </div>
                       <div class="location-info">
                         <div id="start-info">출발지 :</div>
@@ -51,7 +53,7 @@
                       <h1>현재 날씨</h1>
                       <form id="search-form">
                           <input type="text" id="city-input" placeholder="도시를 입력하세요!" required>
-                          <button type="submit">search</button>
+                          <button type="submit">🔍</button>
                       </form>
                       <div id="weather"></div>
                   </div>
@@ -162,6 +164,9 @@
     kakao.maps.load(() => {
       initMap();
     });
+    window.onload = () => {
+      locationWeather();
+    };
   </script>
   <script type="text/javaScript" src="js/categorymap.js"></script>
 </body>
