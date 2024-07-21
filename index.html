@@ -24,22 +24,20 @@
                 <div class="tab-content" id="nav-tabContent">
                   <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
                     <div class="buttons">
-                      <div id="clickLatlng"></div>
+                      <!-- <div id="clickLatlng"></div> -->
                       <div class="search-container">
-                        <div>
+                        <button id="delete-button" onclick="removeAll()"><i class="fa-solid fa-trash-can"></i></button>
                           <div>
-                            <input type="text" id="search-start" placeholder="출발지..." onkeypress="handleSearch('start')">
+                            <input class="search-box" type="text" id="search-start" placeholder="출발지..." onkeypress="handleSearch('start')">
                             <span class="search-icon" onclick="handleSearch()">🔍</span>
                             <button type="button" id="start-mic-start" class="mic-button"><i class="fa-solid fa-microphone"></i></button>
                           </div>
                           <div>
-                            <input type="text" id="search-end" placeholder="도착지..." onkeypress="searchHandle('end')">
+                            <input class="search-box" type="text" id="search-end" placeholder="도착지..." onkeypress="searchHandle('end')">
                             <span class="search-icon" onclick="searchHandle()">🔍</span>
                             <button type="button" id="start-mic-end" class="mic-button"><i class="fa-solid fa-microphone"></i></button>
                           </div>
-                          <button id="delete-button" onclick="removeAll()"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
-                      </div>
                       <div class="location-info">
                         <div id="start-info">출발지 :</div>
                         <div id="end-info">도착지 :</div>
