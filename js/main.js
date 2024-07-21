@@ -734,20 +734,40 @@ document.querySelector('.liked-tab').addEventListener('click', () => {
 });
 
 document.querySelectorAll('.tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-        document.querySelector('.tab.active').classList.remove('active');
-        tab.classList.add('active');
+  tab.addEventListener('click', () => {
+      document.querySelector('.tab.active').classList.remove('active');
+      tab.classList.add('active');
 
-        if (tab.classList.contains('search-tab')) {
-            document.querySelector('.search-container').style.display = 'block';
-            document.getElementById('placesList').style.display = 'block';
-            document.getElementById('pagination').style.display = 'block';
-            document.getElementById('favorites').style.display = 'none';
-        } else {
-            document.querySelector('.search-container').style.display = 'none';
-            document.getElementById('placesList').style.display = 'none';
-            document.getElementById('pagination').style.display = 'none';
-            document.getElementById('favorites').style.display = 'block';
-        }
-    });
+      const isSearchTab = tab.classList.contains('search-tab');
+
+      // Show/hide relevant elements and disable/enable functionalities based on the active tab
+      document.querySelector('.search-container').style.display = isSearchTab ? 'block' : 'none';
+      document.getElementById('placesList').style.display = isSearchTab ? 'block' : 'none';
+      document.getElementById('pagination').style.display = isSearchTab ? 'block' : 'none';
+      document.getElementById('favorites').style.display = isSearchTab ? 'none' : 'block';
+
+      // Enable/disable functionalities based on active tab
+      if (isSearchTab) {
+          // Enable search tab functionalities
+          document.getElementById('search-start').disabled = false;
+          document.getElementById('search-end').disabled = false;
+          document.getElementById('search-button').disabled = false;
+
+          // Disable route tab functionalities
+          document.getElementById('search-start').disabled = true;
+          document.getElementById('search-end').disabled = true;
+          document.getElementById('start-mic-start').disabled = true;
+          document.getElementById('start-mic-end').disabled = true;
+      } else {
+          // Enable route tab functionalities
+          document.getElementById('search-start').disabled = true;
+          document.getElementById('search-end').disabled = true;
+          document.getElementById('search-button').disabled = true;
+
+          // Disable search tab functionalities
+          document.getElementById('start-mic-start').disabled = false;
+          document.getElementById('start-mic-end').disabled = false;
+      }
+  });
 });
+
