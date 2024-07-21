@@ -61,8 +61,8 @@ const initMap = () => {
     const infowindowContent = `
     <div style="padding:5px;font-size:12px; position: relative; height: 95px;">
       <div>위치 선택하기</div>
-      <button onclick="selectLocation(${latlng.getLat()}, ${latlng.getLng()}, 'start', '${latlng.getLat()}, ${latlng.getLng()}')">출발지로 선택하기</button>
-      <button onclick="selectLocation(${latlng.getLat()}, ${latlng.getLng()}, 'end', '${latlng.getLat()}, ${latlng.getLng()}')">도착지로 선택하기</button>
+      <button onclick="selectLocation(${latlng.getLat()}, ${latlng.getLng()}, 'start', '클릭한 위치')">출발지로 선택하기</button>
+      <button onclick="selectLocation(${latlng.getLat()}, ${latlng.getLng()}, 'end', '클릭한 위치')">도착지로 선택하기</button>
       <button style="position: absolute; top: 0; right: 0;" onclick="infowindow.close()">x</button>
     </div>
  `;
@@ -88,57 +88,68 @@ const searchHandle = () => {
 /// 출발지 또는 도착지 선택
 const selectLocation = async (lat, lng, type, placeName) => {
   if (type === 'start') {
-    if (startMarker) {
-      startMarker.setMap(null);
-    }
-    startMarker = new kakao.maps.Marker({
-      map: map,
-      position: new kakao.maps.LatLng(lat, lng)
-    });
-    origin = `${lng},${lat}`;
-    startName = placeName; // 장소 이름 저장
-  } else if (type === 'end') {
-    clearClickMarkers();
-    if (endMarker) {
-      endMarker.setMap(null);
-    }
-    endMarker = new kakao.maps.Marker({
-      map: map,
-      position: new kakao.maps.LatLng(lat, lng)
-    });
-    destination = `${lng},${lat}`;
-    endName = placeName; // 장소 이름 저장
+      clearClickMarkers();
 
-    // 출발지가 설정되지 않은 경우, 현재 위치를 출발지로 설정
-    if (!origin) {
-      try {
-        const position = await getCurrentPosition();
-        const currentLat = position.coords.latitude;
-        const currentLng = position.coords.longitude;
-        
-        // 현재 위치를 출발지로 설정
-        origin = `${currentLng},${currentLat}`;
-        startName = '현위치'
-        // 현재 위치 마커 추가
-        if (startMarker) {
+      if (startMarker) {
           startMarker.setMap(null);
-        }
-        startMarker = new kakao.maps.Marker({
-          map: map,
-          position: new kakao.maps.LatLng(currentLat, currentLng)
-        });
-
-        console.log(`출발지 자동 설정됨: ${origin}`);
-      } catch (error) {
-        console.error('현재 위치를 가져오는 중 오류가 발생했습니다.', error);
-        return;
       }
-    }
-    removeClickMarker(lat,lng);
+      startMarker = new kakao.maps.Marker({
+          map: map,
+          position: new kakao.maps.LatLng(lat, lng)
+      });
+      origin = `${lng},${lat}`;
+      startName = placeName; // 장소 이름 저장
 
-    if (origin && destination) {
-      getCarDirection();
-    }
+      removeClickMarker(lat, lng);
+
+      // 출발지와 도착지가 모두 설정된 경우 경로를 업데이트
+      if (origin && destination) {
+          getCarDirection();
+      }
+  } else if (type === 'end') {
+      clearClickMarkers();
+
+      if (endMarker) {
+          endMarker.setMap(null);
+      }
+      endMarker = new kakao.maps.Marker({
+          map: map,
+          position: new kakao.maps.LatLng(lat, lng)
+      });
+      destination = `${lng},${lat}`;
+      endName = placeName; // 장소 이름 저장
+
+      // 출발지가 설정되지 않은 경우, 현재 위치를 출발지로 설정
+      if (!origin) {
+          try {
+              const position = await getCurrentPosition();
+              const currentLat = position.coords.latitude;
+              const currentLng = position.coords.longitude;
+
+              // 현재 위치를 출발지로 설정
+              origin = `${currentLng},${currentLat}`;
+              startName = '현위치';
+              // 현재 위치 마커 추가
+              if (startMarker) {
+                  startMarker.setMap(null);
+              }
+              startMarker = new kakao.maps.Marker({
+                  map: map,
+                  position: new kakao.maps.LatLng(currentLat, currentLng)
+              });
+
+              console.log(`출발지 자동 설정됨: ${origin}`);
+          } catch (error) {
+              console.error('현재 위치를 가져오는 중 오류가 발생했습니다.', error);
+              return;
+          }
+      }
+
+      removeClickMarker(lat, lng);
+
+      if (origin && destination) {
+          getCarDirection();
+      }
   }
 
   updateInfo();
