@@ -13,7 +13,10 @@ const getWeather = async (city) => {
     displayWeather(data);
     console.log(data);
   } catch (error) {
-    console.error("날씨 정보를 가져오는 동안 문제가 발생했습니다. 문제 내용은 다음과 같습니다. ", error.message);
+    console.error(
+      "날씨 정보를 가져오는 동안 문제가 발생했습니다. 문제 내용은 다음과 같습니다. ",
+      error.message
+    );
   }
 };
 
@@ -25,34 +28,45 @@ const displayWeather = (data) => {
   const city = data.name;
 
   weatherDiv.innerHTML = `
-    <p>도시 : ${city}</p>
-    <p>날씨 : ${weatherDescription}</p>
-    <p>온도 : ${temperature}℃</p>
+    <div class="weather-item city">${city}</div>
+    <div class="weather-item description">${weatherDescription}</div>
+    <div class="weather-item temperature">${temperature}℃</div>
   `;
 };
 
 // 현재 위치를 기반으로 날씨 정보를 가져오는 함수
 const locationWeather = () => {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
 
-      const locationWeatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=kr&appid=${weatherApiKey}`;
-      try {
-        const response = await fetch(locationWeatherApiUrl);
-        if (!response.ok) {
-          throw new Error("현재 위치의 날씨 정보를 가져오는 중에 오류가 발생했습니다.");
+        const locationWeatherApiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=kr&appid=${weatherApiKey}`;
+        try {
+          const response = await fetch(locationWeatherApiUrl);
+          if (!response.ok) {
+            throw new Error(
+              "현재 위치의 날씨 정보를 가져오는 중에 오류가 발생했습니다."
+            );
+          }
+          const data = await response.json();
+          displayWeather(data);
+          console.log(data);
+        } catch (error) {
+          console.error(
+            "현재 위치의 날씨 정보를 가져오는 동안 문제가 발생했습니다. 문제 내용은 다음과 같습니다. ",
+            error.message
+          );
         }
-        const data = await response.json();
-        displayWeather(data);
-        console.log(data);
-      } catch (error) {
-        console.error("현재 위치의 날씨 정보를 가져오는 동안 문제가 발생했습니다. 문제 내용은 다음과 같습니다. ", error.message);
+      },
+      (error) => {
+        console.error(
+          "위치 정보를 가져오는 중에 오류가 발생했습니다.",
+          error.message
+        );
       }
-    }, (error) => {
-      console.error("위치 정보를 가져오는 중에 오류가 발생했습니다.", error.message);
-    });
+    );
   } else {
     alert("현재 위치를 가져올 수 없는 브라우저입니다.");
   }
