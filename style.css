@@ -328,3 +328,15 @@ p {
     font-size: 11px;
     margin-top: 0;
   }
+
+  .weather-box {
+    width: 200px;
+    height: auto;
+    border: 1px solid lightcoral;
+    background-color: #fff;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
